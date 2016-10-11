@@ -1,40 +1,46 @@
 %token <int> INT
-%token <float> FLOAT
 %token <string> STRING 
-%token TRUE
-%token FALSE
-%token BAR  (* | for pattern matching *)
-%token ASSIGN
 %token PLUS MINUS TIMES DIV
 %token LEQ GEQ EQUAL NOTEQUAL
 %token AND OR NOT
 %token LPAREN RPAREN
+%token COLON
+%token LET
+%token DO
+%token IN
+%token EXCLAMATION
+%token WHILE
+%token NEW
 %token EOF 
-%token COMMA
+%token FULLSTOP
 
-%left LEQ                /* lowest precedence */
-%left GEQ
-%left EQUAL
-%left NOTEQUAL
-%left AND 
-%left OR
-%left NOT                 /* highest precedence */
-%start <int list> top
+%start <Ast.program> top
 
 %%
 
 top : 
-	| el = separated_list(COMMA, exp); EOF { el }
+	| el = separated_list(FULLSTOP, exp); EOF { el }
 
 exp : 
-	| e = exp; PLUS;   f = exp 		{ e + f }
-	| e = exp; TIMES;  f = exp		{ e * f }
-	| e = exp; MINUS;  f = exp		{ e - f }
-	| e = exp; DIV;    f = exp 		{ e / f } /* 
-	| e = exp; AND;    f = exp 		{ e && f } 
-	| e = exp; OR;     f = exp 		{ e || f } 
-	| e = exp; NOT;    f = exp 		{ !e }
-	| e = exp; LEQ;    f = exp 		{ e <= f }
-	| e = exp; GEQ;    f = exp 		{ e >= f }
-	| e = exp; EQUAL;  f = exp   	{ e == f }
-	| e = exp; NOTEQUAL; f = exp 	{ e != f } */
+	| i = INT 						{ Const(i) }
+	| e = exp; PLUS;   f = exp 		{ Operator(Plus, e, f) }
+	| e = exp; TIMES;  f = exp		{ Operator(Times, e, f) }
+	| e = exp; MINUS;  f = exp		{ Operator(Minus, e, f) }
+	| e = exp; DIV;    f = exp 		{ Operator(Divide, e, f) } 
+	| e = exp; AND;    f = exp 		{ Operator(And, e, f) } 
+	| e = exp; OR;     f = exp 		{ Operator(Or, e, f) } 
+	| NOT; e = exp; 				{ Operator(Not, e, e) }
+	| e = exp; LEQ;    f = exp 		{ Operator(Leq, e, f) }
+	| e = exp; GEQ;    f = exp 		{ Operator(Geq, e, f) }
+	| e = exp; EQUAL;  f = exp   	{ Operator(Equal, e, f) }
+	| e = exp; NOTEQUAL; f = exp 	{ Operator(Noteq, e, f) }
+	| e = exp; COLON; f = exp 		{ Seq(e, f) }
+	| WHILE; e = exp; DO; f = exp;  { While(e,f) }
+	| e = exp; COLON; EQUAL; f = exp; { Asg(e, f) }
+	| EXCLAMATION; e = exp; 		{ Deref(e) }
+	| e = exp; RPAREN; f = exp; LPAREN; { Application(e,f) }
+	| name = STRING 				{ Identifier(name) }
+	| LET; x = exp; EQUAL; e = exp; IN; f = exp; { Let(x,e,f) }
+	| NEW; x = exp; EQUAL; e = exp; IN; f = exp; { New(x,e,f) }
+
+

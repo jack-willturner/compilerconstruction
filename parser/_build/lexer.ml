@@ -122,83 +122,83 @@ let rec read lexbuf =
 and __ocaml_lex_read_rec lexbuf __ocaml_lex_state =
   match Lexing.engine __ocaml_lex_tables __ocaml_lex_state lexbuf with
       | 0 ->
-# 32 "lexer.mll"
+# 29 "lexer.mll"
           ( read lexbuf )
 # 128 "lexer.ml"
 
   | 1 ->
-# 33 "lexer.mll"
+# 30 "lexer.mll"
             ( read lexbuf )
 # 133 "lexer.ml"
 
   | 2 ->
-# 34 "lexer.mll"
+# 31 "lexer.mll"
          ( INT (int_of_string (Lexing.lexeme lexbuf)) )
 # 138 "lexer.ml"
 
   | 3 ->
-# 35 "lexer.mll"
+# 32 "lexer.mll"
          ( PLUS )
 # 143 "lexer.ml"
 
   | 4 ->
-# 36 "lexer.mll"
+# 33 "lexer.mll"
          ( TIMES )
 # 148 "lexer.ml"
 
   | 5 ->
-# 37 "lexer.mll"
+# 34 "lexer.mll"
          ( DIV )
 # 153 "lexer.ml"
 
   | 6 ->
-# 38 "lexer.mll"
+# 35 "lexer.mll"
         ( MINUS )
 # 158 "lexer.ml"
 
   | 7 ->
-# 39 "lexer.mll"
+# 36 "lexer.mll"
           ( AND )
 # 163 "lexer.ml"
 
   | 8 ->
-# 40 "lexer.mll"
+# 37 "lexer.mll"
           ( OR )
 # 168 "lexer.ml"
 
   | 9 ->
-# 41 "lexer.mll"
+# 38 "lexer.mll"
           ( NOT )
 # 173 "lexer.ml"
 
   | 10 ->
-# 42 "lexer.mll"
+# 39 "lexer.mll"
          ( LEQ )
 # 178 "lexer.ml"
 
   | 11 ->
-# 43 "lexer.mll"
+# 40 "lexer.mll"
           ( GEQ )
 # 183 "lexer.ml"
 
   | 12 ->
-# 44 "lexer.mll"
+# 41 "lexer.mll"
          ( EQUAL )
 # 188 "lexer.ml"
 
   | 13 ->
-# 45 "lexer.mll"
+# 42 "lexer.mll"
          ( NOTEQUAL )
 # 193 "lexer.ml"
 
   | 14 ->
-# 46 "lexer.mll"
+# 43 "lexer.mll"
        ( raise (SyntaxError ("Unexpected char: " ^
                      Lexing.lexeme lexbuf)) )
 # 199 "lexer.ml"
 
   | 15 ->
-# 48 "lexer.mll"
+# 45 "lexer.mll"
          ( EOF )
 # 204 "lexer.ml"
 
