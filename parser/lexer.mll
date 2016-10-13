@@ -28,24 +28,26 @@ let id = letter+ digit*
 rule read =
 	parse
 	| white 	{ read lexbuf }
-	| newline { read lexbuf }
+	| newline 	{ read lexbuf }
 	| int 		{ INT (int_of_string (Lexing.lexeme lexbuf)) }
-	| float  	{ FLOAT (float_of_string (Lexing.lexeme lexbuf)) }
-	| id 	 		{ STRING (Lexing.lexeme lexbuf) }
+	| id 	 	{ STRING (Lexing.lexeme lexbuf) }
 	| '+' 		{ PLUS }
 	| '*' 		{ TIMES }
 	| '/' 		{ DIV }
-	| '-'			{ MINUS }
+	| '-'		{ MINUS }
+	| ';'		{ SEMIC }
 	| "and" 	{ AND }
 	| "or" 		{ OR }
 	| "not"		{ NOT }
 	| "<="		{ LEQ }
 	| ">=" 		{ GEQ }
 	| "=="		{ EQUAL }
-	| "!="		{ NOTEQUAL }
 	| '('	 	{ LPAREN }
 	| ')'		{ RPAREN }
+	| '{'		{ LBRACE }
+	| '}'		{ RBRACE }
 	| ':'		{ COLON }
+	| "->" 		{ DEF }
 	| "let"		{ LET }
 	| "in"		{ IN }
 	| "do" 		{ DO }
@@ -55,6 +57,7 @@ rule read =
 	| "while"	{ WHILE }
 	| "new"		{ NEW }
 	| '.'		{ FULLSTOP }
+	| ','       { COMMA }
 	| "read_int" { READINT }
 	| _ 		{ raise (SyntaxError ("Unexpected char: " ^
                      Lexing.lexeme lexbuf)) }

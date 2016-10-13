@@ -1,10 +1,10 @@
-{ 
+{
 open Lexing
 open Parser
 
 exception SyntaxError of string
 
-let next_line lexbuf = 
+let next_line lexbuf =
 	let pos = lexbuf.lex_curr_p in
   lexbuf.lex_curr_p <-
     { pos with pos_bol = lexbuf.lex_curr_pos;
@@ -25,8 +25,8 @@ let id = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*
 let letter = ['a'-'z' 'A'-'Z']
 let id = letter+ digit*
 
-rule read = 
-	parse 
+rule read =
+	parse
 	| white 	{ read lexbuf }
 	| newline 	{ read lexbuf }
 	| int 		{ INT (int_of_string (Lexing.lexeme lexbuf)) }
@@ -35,26 +35,30 @@ rule read =
 	| '*' 		{ TIMES }
 	| '/' 		{ DIV }
 	| '-'		{ MINUS }
+	| ';'		{ SEMIC }
 	| "and" 	{ AND }
 	| "or" 		{ OR }
 	| "not"		{ NOT }
 	| "<="		{ LEQ }
 	| ">=" 		{ GEQ }
 	| "=="		{ EQUAL }
-	| "!="		{ NOTEQUAL }
 	| '('	 	{ LPAREN }
 	| ')'		{ RPAREN }
+	| '{'		{ LBRACE }
+	| '}'		{ RBRACE }
 	| ':'		{ COLON }
+	| "->" 		{ DEF }
 	| "let"		{ LET }
 	| "in"		{ IN }
 	| "do" 		{ DO }
-	| "if"		{ IF }	
+	| "if"		{ IF }
 	| "else"	{ ELSE }
 	| '!'		{ EXCLAMATION}
 	| "while"	{ WHILE }
 	| "new"		{ NEW }
 	| '.'		{ FULLSTOP }
-	| "read_int" { READINT } 
+	| ','       { COMMA }
+	| "read_int" { READINT }
 	| _ 		{ raise (SyntaxError ("Unexpected char: " ^
                      Lexing.lexeme lexbuf)) }
 	| eof 		{ EOF }

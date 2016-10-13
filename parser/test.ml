@@ -26,4 +26,4 @@ let _ =
 	read_to_empty (Buffer.create 1)
 	|> Buffer.contents
 	|> Lexing.from_string
-	|> parse_with_error
+	|> parse_with_error; print_string "Successfully parsed!\n"

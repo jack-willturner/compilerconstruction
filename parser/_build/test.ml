@@ -2,9 +2,9 @@ open Lexing
 open Lexer
 open Printf
 
-let rec read_to_empty buf = 
-	let s = read_line () in 
-	if s = "" then buf 
+let rec read_to_empty buf =
+	let s = read_line () in
+	if s = "" then buf
 	else (Buffer.add_string buf s;
 		  Buffer.add_string buf "\n";
 		  read_to_empty buf)
@@ -22,8 +22,8 @@ let parse_with_error lexbuf =
                        print_position lexbuf;
                        exit (-1)
 
-let _ = 
+let _ =
 	read_to_empty (Buffer.create 1)
 	|> Buffer.contents
 	|> Lexing.from_string
-	|> parse_with_error
+	|> parse_with_error; print_string "Successfully parsed!\n"

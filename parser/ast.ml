@@ -1,7 +1,7 @@
 type opcode =
   | Plus | Minus | Times | Divide
   | Leq | Geq | Equal | Noteq
-  | And | Or | Not
+  | And | Or | Not 
 
 type expression =
   | Seq of expression * expression (* e; e *)
@@ -10,7 +10,7 @@ type expression =
   | Asg of expression * expression (* e := e *)
   | Deref of expression (* !e *)
   | Operator of opcode * expression * expression (* e + e *)
-  | Application of expression * expression (* e(e) *)
+  | Application of expression * expression list (* e(e) *)
   | Const of int (* 7 *)
   | Readint (* read_int () *)
   | Printint of expression (* print_int (e) *)
