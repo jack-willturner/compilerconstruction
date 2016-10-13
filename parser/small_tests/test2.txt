@@ -1,0 +1,2 @@
+main (params) : 
+	x := 5

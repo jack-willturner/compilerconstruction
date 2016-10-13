@@ -36,6 +36,7 @@ rule read =
 	| '/' 		{ DIV }
 	| '-'		{ MINUS }
 	| ';'		{ SEMIC }
+	| ':'		{ COLON }
 	| "and" 	{ AND }
 	| "or" 		{ OR }
 	| "not"		{ NOT }
@@ -46,7 +47,7 @@ rule read =
 	| ')'		{ RPAREN }
 	| '{'		{ LBRACE }
 	| '}'		{ RBRACE }
-	| ':'		{ COLON }
+	| ":="		{ ASSIGN }
 	| "->" 		{ DEF }
 	| "let"		{ LET }
 	| "in"		{ IN }
