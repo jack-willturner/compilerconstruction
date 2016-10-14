@@ -14,7 +14,7 @@ let _ =
 	read_to_empty (Buffer.create 1)
 	|> Buffer.contents
 	|> Lexing.from_string
-	|> Parser.top Lexer.read
+	|> Parser.top Lexer.read (*
 	|> List.map Ast.function_string
 	|> String.concat ",\n"
-	|> print_endline
+	|> print_endline *)

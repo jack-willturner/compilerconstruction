@@ -3,7 +3,8 @@ open Lexer
 open Printf
 open Ast
 
-let test_files = ["small_tests/test1.txt";"small_tests/test2.txt";"small_tests/test3.txt"]
+let test_files = ["small_tests/test1.txt";"small_tests/test2.txt";"small_tests/test3.txt";"small_tests/test4.txt";
+                  "small_tests/test5";"big_tests/iter_bisect";"big_tests/rec_bisect" ]
 
 let rec read_to_empty buf in_channel =
 	try
@@ -33,11 +34,11 @@ let main filename =
 	read_to_empty (Buffer.create 1) in_channel
 	|> Buffer.contents
 	|> Lexing.from_string
-	|> parse_with_error
+	|> parse_with_error (*
 	|> List.map Ast.function_string
 	|> String.concat " "
     |> print_string
-    |> print_newline
+    |> print_newline *)
 
 let rec map_with_print f ls =
 	match ls with

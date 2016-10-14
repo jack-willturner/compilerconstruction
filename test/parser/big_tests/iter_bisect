@@ -1,12 +1,12 @@
 iterativebisection(f, endpoint1, endpoint2, tolerance, maxiterations) :
-	new n = 1 in 
-	while (n <= max_iterations) {
-		new c = (endpoint1 + endpoint2) / 2 in 
+	new n := 1 in 
+	while (n <= maxiterations) {
+		new c := (endpoint1 + endpoint2) / 2 in 
 		if  (f(c) == 0 or (endpoint2 - endpoint1)/2 <= tolerance) {
-			print_string(c)
+			printstring(c)
 		} else {
 			n := n + 1;
-			if(sign(f(c)) = sign(f(a))) {
+			if(sign(f(c)) == sign(f(a))) {
 			 	endpoint1 := c
 			} else {
 				endpoint2 := c

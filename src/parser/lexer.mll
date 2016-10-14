@@ -80,6 +80,7 @@ rule read =
 	| "else"	  { ELSE }
 	| '!'		  { EXCLAMATION}
 	| "while"	  { WHILE }
+	| "in"        { IN }
 	| "new"	  	  { NEW }
 	| "(*"		  { comment lexbuf; read lexbuf}
 	| "*)"        { read lexbuf }

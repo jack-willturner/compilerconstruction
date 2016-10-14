@@ -1,0 +1,12 @@
+recursivebisection(f, endpoint1, endpoint2, tolerance, currIteration, maxIterations) :
+     if (currIteration <= maxIterations) {
+        new c := (endpoint1 + endpoint2) / 2 in
+        if  (f(c) == 0 or (endpoint2 - endpoint1)/2 <= tolerance) {
+	   printstring(c)
+        } else {
+          currIteration := currIteration + 1;
+          recursivebisection(f, c, endpoint2, tolerance, currIteration, maxIterations)
+        }
+     } else {
+	printstring(endpoint1)
+     }

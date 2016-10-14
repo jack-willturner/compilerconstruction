@@ -11,7 +11,7 @@ type expression =
   | Asg of expression * expression (* e := e *)
   | Deref of expression (* !e *)
   | Operator of opcode * expression * expression (* e + e *)
-  | Application of expression * expression (* e(e) *)
+  | Application of expression * expression list (* e(e) *)
   | Const of int (* 7 *)
   | Readint (* read_int () *)
   | Printint of expression (* print_int (e) *)
@@ -37,7 +37,7 @@ let opcode_string = function
   | Or -> "Or"
   | Not -> "Not"
 
-
+(*
 let rec exp_string = function
   | Empty -> "empty"
   | Seq (e, f) -> "Seq ( " ^ exp_string e ^ "; " ^ exp_string f ^ " ) "
@@ -47,7 +47,6 @@ let rec exp_string = function
   | Deref e -> "Deref (" ^ exp_string e ^ ")"
   | Operator (Not, Empty, e) -> "Operator ( Not, " ^ exp_string e ^ " ) "
   | Operator (op, e, f) -> "Operator ( " ^ opcode_string op ^ ", " ^ exp_string e ^ ", " ^ exp_string f ^ " ) "
-  | Application (e, f) -> "Application ( " ^ exp_string e ^ " ( " ^ exp_string f ^ " ) "
   | Const i -> "Const " ^ string_of_int i
   | Readint -> "Readint () "
   | Printint e -> "Printint ( " ^ exp_string e ^ " ) "
@@ -56,4 +55,4 @@ let rec exp_string = function
   | New (s, e, f) -> "New ( \"" ^ s ^ "\" = " ^ exp_string e ^ " ) In { " ^ exp_string f ^ " } "
 
 let function_string = function
-  | (name, args, body) -> name ^ " ( " ^ String.concat ", " args  ^ " ) { " ^ exp_string body ^ " }"
+  | (name, args, body) -> name ^ " ( " ^ String.concat ", " args  ^ " ) { " ^ exp_string body ^ " }" *)

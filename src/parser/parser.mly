@@ -8,7 +8,7 @@
 %token              AND OR NOT
 %token 				COLON
 
-%token              LET NEW WHILE IF ASSIGN ELSE PRINTINT READINT EXCLAMATION FULLSTOP
+%token              LET NEW WHILE IF ASSIGN ELSE PRINTINT READINT EXCLAMATION FULLSTOP IN
 
 %token              LPAREN RPAREN SEMIC LBRACE RBRACE COMMA
 
@@ -25,6 +25,7 @@
 %left               TIMES DIV
 %right              EXCLAMATION
 %right              NOT
+%left               IN
 %right              LPAREN
 
 %start <Ast.program> top
@@ -35,7 +36,7 @@ exp:
     | e = params                                                                      { e }
     | e = INT                                                                         { Const e }
     | e = STRING                                                                      { Identifier e }
-    | e = exp;    p =  params                                                         { Application (e, p) }
+    | e = exp;    LPAREN; el = separated_list(COMMA, exp); RPAREN;                    { Application (e, el) }
     | e = exp;    o = operator;   f = exp                                             { Operator (o, e, f) }
     | NOT;        e = exp                                                             { Operator (Not, Empty, e) }
     | e = exp;    ASSIGN;         f = exp                                             { Asg (e, f) }
@@ -45,8 +46,8 @@ exp:
     | EXCLAMATION; e = exp                                                            { Deref e }
     | PRINTINT;   e = exp                                                             { Printint e }
     | READINT;  			                                                          { Readint }
-    | LET; x = STRING; ASSIGN; e = exp; SEMIC; f = exp;                               { Let(x,e,f) }
-    | NEW; x = STRING; ASSIGN; e = exp; SEMIC; f = exp;                               { New(x,e,f) };;
+    | LET; x = STRING; ASSIGN; e = exp; IN; f = exp;                               { Let(x,e,f) }
+    | NEW; x = STRING; ASSIGN; e = exp; IN; f = exp;                               { New(x,e,f) };;
 
 
 params:
