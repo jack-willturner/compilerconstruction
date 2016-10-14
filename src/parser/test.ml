@@ -4,8 +4,8 @@ open Printf
 open Ast
 
 let test_files = ["test/parser/small_tests/test1.txt";"test/parser/small_tests/test2.txt";"test/parser/small_tests/test3.txt";
-                  "test/parser/small_tests/test4.txt";"test/parser/small_tests/test5";"test/parser/big_tests/iter_bisect";
-                  "test/parser/big_tests/rec_bisect" ]
+                  "test/parser/small_tests/test4.txt";"test/parser/small_tests/test5";"test/parser/small_tests/test6";
+                  "test/parser/small_tests/test7";"test/parser/big_tests/iter_bisect";"test/parser/big_tests/rec_bisect" ]
 
 let rec read_to_empty buf in_channel =
 	try
