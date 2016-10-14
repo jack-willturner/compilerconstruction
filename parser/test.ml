@@ -2,10 +2,11 @@ open Lexing
 open Lexer
 open Printf
 
-let test_files = ["small_tests/test1.txt"; "small_tests/test2.txt"; "small_tests/test3.txt"; "small_tests/test4.txt"]
+let test_files = ["small_tests/test1.txt"; "small_tests/test2.txt"; "small_tests/test3.txt"; "small_tests/test4.txt";
+ 									"big_tests/iter_bisect"; "big_tests/rec_bisect"]
 
 let rec read_to_empty buf in_channel =
-	try  
+	try
 		let s = input_line in_channel in
 		if s = "" then buf
 		else (Buffer.add_string buf s;
@@ -16,7 +17,7 @@ let rec read_to_empty buf in_channel =
 
 let print_position lexbuf =
   let pos = lexbuf.lex_curr_p in
-  eprintf "Pos %d:%d:%d\n" pos.pos_lnum pos.pos_bol pos.pos_cnum
+  eprintf "Line: %d, File: %d, Position: %d\n" !Lexer.lineno pos.pos_bol pos.pos_cnum
 
 let parse_with_error lexbuf =
   try Parser.top Lexer.read lexbuf with
@@ -27,7 +28,7 @@ let parse_with_error lexbuf =
                        print_position lexbuf;
                        exit (-1)
 
-let main filename = 
+let main filename =
 	let in_channel = open_in filename in
 	read_to_empty (Buffer.create 1) in_channel
 	|> Buffer.contents
@@ -38,9 +39,6 @@ let rec map_with_print f ls =
 	match ls with
 	| [] 		-> []
 	| x::xs 	-> printf "Parsing %s\n" x;
-				   f x :: map_with_print f xs 
+				   f x :: map_with_print f xs
 
 let _ = map_with_print main test_files ; print_string "All tests passed! \n"
-
-
-

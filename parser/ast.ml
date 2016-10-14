@@ -1,7 +1,7 @@
 type opcode =
   | Plus | Minus | Times | Divide
   | Leq | Geq | Equal | Noteq
-  | And | Or | Not 
+  | And | Or | Not
 
 type expression =
   | Seq of expression * expression (* e; e *)

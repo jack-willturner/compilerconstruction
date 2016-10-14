@@ -4,6 +4,8 @@ open Parser
 
 exception SyntaxError of string
 
+let lineno = ref 1
+
 let next_line lexbuf =
 	let pos = lexbuf.lex_curr_p in
   lexbuf.lex_curr_p <-
@@ -13,13 +15,13 @@ let next_line lexbuf =
 }
 
 
-(* -- Would like to implement this correctly but struggling to get the lookup to fail correctly 
+(* -- Would like to implement this correctly but struggling to get the lookup to fail correctly
 
-let make_hash n pairs = 
-	let t = Hashtbl.create n in 
+let make_hash n pairs =
+	let t = Hashtbl.create n in
 	List.iter (fun (k,v) -> Hashtbl.add t k v) pairs; t
 
-let keyword_table = 
+let keyword_table =
 	make_hash 64
 		[ ("and", AND); ("or", OR); ("not", NOT); ("let", LET); ("in", IN); ("do", DO);
 		  ("if", IF); ("else", ELSE); ("while", WHILE); ("new", NEW); ("read_int", READINT);
@@ -27,11 +29,11 @@ let keyword_table =
 
 let idtable = Hashtbl.create 64
 
-let lookup s = 
+let lookup s =
 	try Hashtbl.find keyword_table s with
 		Not_found -> Hashtbl.replace idtable s (); s
 
-let get_identifiers () = 
+let get_identifiers () =
 	Hashtbl.fold (fun k () ks -> k::ks) idtable []
 
 }
@@ -52,37 +54,36 @@ let id = letter+ digit*
 
 rule read =
 	parse
-	| white 	{ read lexbuf }
-	| newline 	{ read lexbuf }
-	| int 		{ INT (int_of_string (Lexing.lexeme lexbuf)) }
-	| id 	 	{ STRING (Lexing.lexeme lexbuf) }
-	| '+' 		{ PLUS }
-	| '*' 		{ TIMES }
-	| '/' 		{ DIV }
-	| '-'		{ MINUS }
-	| ';'		{ SEMIC }
-	| ':'		{ COLON }
-	| "and" 	{ AND }
-	| "or" 		{ OR }
-	| "not"		{ NOT }
-	| "<="		{ LEQ }
-	| ">=" 		{ GEQ }
-	| "=="		{ EQUAL }
-	| '('	 	{ LPAREN }
-	| ')'		{ RPAREN }
-	| '{'		{ LBRACE }
-	| '}'		{ RBRACE }
-	| ":="		{ ASSIGN }
-	| "->" 		{ DEF }
-	| "let"		{ LET }
-	| "in"		{ IN }
-	| "do" 		{ DO }
-	| "if"		{ IF }
-	| "else"	{ ELSE }
-	| '!'		{ EXCLAMATION}
-	| "while"	{ WHILE }
-	| "new"		{ NEW }
-	| '.'		{ FULLSTOP }
+	| white 	  { read lexbuf }
+	| newline 	{ incr lineno; read lexbuf }
+	| int 		  { INT (int_of_string (Lexing.lexeme lexbuf)) }
+	| id 	 	    { STRING (Lexing.lexeme lexbuf) }
+	| '+' 		  { PLUS }
+	| '*' 		  { TIMES }
+	| '/' 		  { DIV }
+	| '-'		    { MINUS }
+	| ';'		    { SEMIC }
+	| ':'		    { COLON }
+	| "and"   	{ AND }
+	| "or" 	  	{ OR }
+	| "not"		  { NOT }
+	| "<="		  { LEQ }
+	| ">=" 		  { GEQ }
+	| "=="		  { EQUAL }
+	| '('	 	    { LPAREN }
+	| ')'		    { RPAREN }
+	| '{'		    { LBRACE }
+	| '}'		    { RBRACE }
+	| ":="		  { ASSIGN }
+	| "let"	  	{ LET }
+	| "in"	  	{ IN }
+	| "if"		  { IF }
+	| "else"	  { ELSE }
+	| '!'		    { EXCLAMATION}
+	| "while"	  { WHILE }
+	| "new"	  	{ NEW }
+	| "(*"			{ comment lexbuf; read lexbuf}
+	| '.'		    { FULLSTOP }
 	| ','       { COMMA }
 	| "read_int" { READINT }
 	| _ 		{ raise (SyntaxError ("Unexpected char: " ^
@@ -90,9 +91,9 @@ rule read =
 	| eof 		{ EOF }
 
 
-and comment = 
-	parse 
-	| "*" 			{ () }
-	| "\n"			{ comment lexbuf }
-	| _ 			{ comment lexbuf }
+and comment =
+	parse
+	| "*)" 			{ () }
+	| "\n"			{ incr lineno; comment lexbuf }
+	| _ 			  { comment lexbuf }
 	| eof 			{ () }
