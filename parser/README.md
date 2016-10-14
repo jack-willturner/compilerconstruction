@@ -10,3 +10,7 @@ Create the `.txt` file with your new program in it and put it in one of the test
 ## Syntax
 
 function :     <function name> ( <parameters> ) : <expressions>
+operations :    <expression> <operator> <expression>
+
+operators:
+  +, -, /, *
