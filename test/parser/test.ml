@@ -3,9 +3,8 @@ open Lexer
 open Printf
 open Ast
 
-let test_files = ["test/parser/small_tests/test1.txt";"test/parser/small_tests/test2.txt";"test/parser/small_tests/test3.txt";
-                  "test/parser/small_tests/test4.txt";"test/parser/small_tests/test5";"test/parser/big_tests/iter_bisect";
-                  "test/parser/big_tests/rec_bisect" ]
+let test_files = ["small_tests/test1.txt";"small_tests/test2.txt";"small_tests/test3.txt";"small_tests/test4.txt";
+                  "small_tests/test5";"big_tests/iter_bisect";"big_tests/rec_bisect" ]
 
 let rec read_to_empty buf in_channel =
 	try
@@ -48,6 +47,3 @@ let rec map_with_print f ls =
 				   f x :: map_with_print f xs
 
 let _ = map_with_print main test_files ; print_string "All tests passed! \n"
-
-
-(* makefile *)
