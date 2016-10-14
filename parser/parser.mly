@@ -60,7 +60,7 @@ exp :
 	| e = exp; SEMIC;  f = exp; 					{ Ast.Seq(e, f) }
 	| e = exp; AND;    f = exp; 					{ Ast.Operator(Ast.And, e, f) }
 	| e = exp; OR;     f = exp; 					{ Ast.Operator(Ast.Or, e, f) }
-	| e = exp; ASSIGN; f = exp; 				{ Ast.Asg(e, f) }
+	| e = exp; ASSIGN; f = exp; 					{ Ast.Asg(e, f) }
 	| NOT; e = exp; 							 	{ Ast.Operator(Ast.Not, e, e) }
 	| WHILE; LPAREN; e = exp; RPAREN; DO; LBRACE; f = exp; RBRACE;	{ Ast.While(e,f) }
 	| IF; LPAREN; e = exp; RPAREN; DO; LBRACE; f = exp; RBRACE; ELSE; LBRACE; g = exp;	RBRACE;	{ Ast.If(e,f,g) }
@@ -69,7 +69,7 @@ exp :
 	| NEW; x = STRING; EQUAL; e = exp; IN; f = exp; { Ast.New(x,e,f) }
 
 fundef :
-	| name = STRING; LPAREN; params = separated_list(COMMA, STRING); RPAREN; COLON; e = exp; { (name, params, e)}
+	| name = STRING; LPAREN; params = separated_list(COMMA, STRING); RPAREN; COLON; e = exp; { (name, params, e) }
 
 top :
 	| el = separated_list(FULLSTOP, fundef); EOF { el }

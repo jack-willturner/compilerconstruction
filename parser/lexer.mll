@@ -12,6 +12,31 @@ let next_line lexbuf =
     }
 }
 
+
+(* -- Would like to implement this correctly but struggling to get the lookup to fail correctly 
+
+let make_hash n pairs = 
+	let t = Hashtbl.create n in 
+	List.iter (fun (k,v) -> Hashtbl.add t k v) pairs; t
+
+let keyword_table = 
+	make_hash 64
+		[ ("and", AND); ("or", OR); ("not", NOT); ("let", LET); ("in", IN); ("do", DO);
+		  ("if", IF); ("else", ELSE); ("while", WHILE); ("new", NEW); ("read_int", READINT);
+		  ("print_int", PRINTINT)]
+
+let idtable = Hashtbl.create 64
+
+let lookup s = 
+	try Hashtbl.find keyword_table s with
+		Not_found -> Hashtbl.replace idtable s (); s
+
+let get_identifiers () = 
+	Hashtbl.fold (fun k () ks -> k::ks) idtable []
+
+}
+*)
+
 let int = '-'? ['0'-'9'] ['0'-'9']*
 let digit = ['0'-'9']
 let frac = '.' digit*
@@ -63,3 +88,11 @@ rule read =
 	| _ 		{ raise (SyntaxError ("Unexpected char: " ^
                      Lexing.lexeme lexbuf)) }
 	| eof 		{ EOF }
+
+
+and comment = 
+	parse 
+	| "*" 			{ () }
+	| "\n"			{ comment lexbuf }
+	| _ 			{ comment lexbuf }
+	| eof 			{ () }

@@ -2,7 +2,7 @@ open Lexing
 open Lexer
 open Printf
 
-let test_files = ["small_tests/test1.txt"; "small_tests/test2.txt"]
+let test_files = ["small_tests/test1.txt"; "small_tests/test2.txt"; "small_tests/test3.txt"; "small_tests/test4.txt"]
 
 let rec read_to_empty buf in_channel =
 	try  
@@ -34,4 +34,13 @@ let main filename =
 	|> Lexing.from_string
 	|> parse_with_error
 
-let _ = List.map main test_files ; print_string "All tests passed! \n"
+let rec map_with_print f ls =
+	match ls with
+	| [] 		-> []
+	| x::xs 	-> printf "Parsing %s\n" x;
+				   f x :: map_with_print f xs 
+
+let _ = map_with_print main test_files ; print_string "All tests passed! \n"
+
+
+

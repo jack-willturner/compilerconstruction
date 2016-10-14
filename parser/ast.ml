@@ -18,6 +18,6 @@ type expression =
   | Let of string * expression * expression (* let x = e in e *)
   | New of string * expression * expression (* new x = e in e *)
 
-type fundef = string * string list * expression 
+type fundef = string * string list * expression
 
 type program = fundef list
