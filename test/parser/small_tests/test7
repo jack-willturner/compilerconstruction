@@ -1,0 +1,5 @@
+main (param, params) :
+	true and true;
+	true or false;
+	not true
+	
