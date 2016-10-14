@@ -1,2 +1,3 @@
+(* Simple test for assignment *)
 main (params) : 
 	x := 5

@@ -1,2 +1,3 @@
+(* test use of identifiers in expressions *)
 main (param, params) :
 	let x := 5 in x + x

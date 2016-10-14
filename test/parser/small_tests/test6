@@ -1,3 +1,4 @@
+(* test mix of let and while statements *)
 main (param, params) :
 	let x := 5 in x + x; 
 	while (x == 10) { 
