@@ -55,45 +55,45 @@ let id = letter+ digit*
 rule read =
 	parse
 	| white 	  { read lexbuf }
-	| newline 	{ incr lineno; read lexbuf }
+	| newline 	  { incr lineno; read lexbuf }
 	| int 		  { INT (int_of_string (Lexing.lexeme lexbuf)) }
-	| id 	 	    { STRING (Lexing.lexeme lexbuf) }
+	| id 	 	  { STRING (Lexing.lexeme lexbuf) }
 	| '+' 		  { PLUS }
 	| '*' 		  { TIMES }
 	| '/' 		  { DIV }
-	| '-'		    { MINUS }
-	| ';'		    { SEMIC }
-	| ':'		    { COLON }
-	| "and"   	{ AND }
-	| "or" 	  	{ OR }
+	| '-'		  { MINUS }
+	| ';'		  { SEMIC }
+	| ':'		  { COLON }
+	| "and"   	  { AND }
+	| "or" 	  	  { OR }
 	| "not"		  { NOT }
 	| "<="		  { LEQ }
 	| ">=" 		  { GEQ }
 	| "=="		  { EQUAL }
-	| '('	 	    { LPAREN }
-	| ')'		    { RPAREN }
-	| '{'		    { LBRACE }
-	| '}'		    { RBRACE }
+	| '('	 	  { LPAREN }
+	| ')'		  { RPAREN }
+	| '{'		  { LBRACE }
+	| '}'         { RBRACE }
 	| ":="		  { ASSIGN }
-	| "let"	  	{ LET }
-	| "in"	  	{ IN }
+	| "let"	  	  { LET }
+	| "in"	  	  { IN }
 	| "if"		  { IF }
 	| "else"	  { ELSE }
-	| '!'		    { EXCLAMATION}
+	| '!'		  { EXCLAMATION}
 	| "while"	  { WHILE }
-	| "new"	  	{ NEW }
-	| "(*"			{ comment lexbuf; read lexbuf}
-	| '.'		    { FULLSTOP }
-	| ','       { COMMA }
-	| "read_int" { READINT }
-	| _ 		{ raise (SyntaxError ("Unexpected char: " ^
+	| "new"	  	  { NEW }
+	| "(*"		  { comment lexbuf; read lexbuf}
+	| '.'		  { FULLSTOP }
+	| ','         { COMMA }
+	| "read_int"  { READINT }
+	| _ 		  { raise (SyntaxError ("Unexpected char: " ^
                      Lexing.lexeme lexbuf)) }
-	| eof 		{ EOF }
+	| eof 		  { EOF }
 
 
 and comment =
 	parse
-	| "*)" 			{ () }
+	| "*)" 			{ read lexbuf }
 	| "\n"			{ incr lineno; comment lexbuf }
-	| _ 			  { comment lexbuf }
-	| eof 			{ () }
+	| _ 			{ comment lexbuf }
+	| eof 			{ EOF }
