@@ -1,2 +1,3 @@
+(* Simple function with one expression - no sequencing. Testing addition operator *)
 main (params) : 
 	5 + 5

@@ -3,3 +3,9 @@ main (param, params) :
 	6 * 6;
 	7 / param;
 	8 - params
+
+
+
+
+let x = 5;
+x + x;

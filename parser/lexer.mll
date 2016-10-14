@@ -57,7 +57,6 @@ rule read =
 	| white 	  { read lexbuf }
 	| newline 	  { incr lineno; read lexbuf }
 	| int 		  { INT (int_of_string (Lexing.lexeme lexbuf)) }
-	| id 	 	  { STRING (Lexing.lexeme lexbuf) }
 	| '+' 		  { PLUS }
 	| '*' 		  { TIMES }
 	| '/' 		  { DIV }
@@ -70,21 +69,23 @@ rule read =
 	| "<="		  { LEQ }
 	| ">=" 		  { GEQ }
 	| "=="		  { EQUAL }
+	| "!="        { NOTEQUAL }
 	| '('	 	  { LPAREN }
 	| ')'		  { RPAREN }
 	| '{'		  { LBRACE }
 	| '}'         { RBRACE }
 	| ":="		  { ASSIGN }
 	| "let"	  	  { LET }
-	| "in"	  	  { IN }
 	| "if"		  { IF }
 	| "else"	  { ELSE }
 	| '!'		  { EXCLAMATION}
 	| "while"	  { WHILE }
 	| "new"	  	  { NEW }
 	| "(*"		  { comment lexbuf; read lexbuf}
+	| "*)"        { read lexbuf }
 	| '.'		  { FULLSTOP }
 	| ','         { COMMA }
+	| id 	 	  { STRING (Lexing.lexeme lexbuf) }
 	| "read_int"  { READINT }
 	| _ 		  { raise (SyntaxError ("Unexpected char: " ^
                      Lexing.lexeme lexbuf)) }
@@ -93,7 +94,7 @@ rule read =
 
 and comment =
 	parse
-	| "*)" 			{ read lexbuf }
+	| "*)" 			{ () }
 	| "\n"			{ incr lineno; comment lexbuf }
 	| _ 			{ comment lexbuf }
-	| eof 			{ EOF }
+	| eof 			{ () }

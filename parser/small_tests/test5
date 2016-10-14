@@ -1,7 +1,3 @@
 main (param, params) :
-	if (param == 1) {
-		param := 2
-	};
-	while (param == 1) {
-		param := param + 1
-	}
+	let x := 5; 
+	x + x

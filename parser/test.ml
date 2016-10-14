@@ -1,9 +1,9 @@
 open Lexing
 open Lexer
 open Printf
+open Ast
 
-let test_files = ["small_tests/test1.txt"; "small_tests/test2.txt"; "small_tests/test3.txt"; "small_tests/test4.txt";
- 									"big_tests/iter_bisect"; "big_tests/rec_bisect"]
+let test_files = ["small_tests/test1.txt";"small_tests/test2.txt";"small_tests/test3.txt"]
 
 let rec read_to_empty buf in_channel =
 	try
@@ -34,6 +34,10 @@ let main filename =
 	|> Buffer.contents
 	|> Lexing.from_string
 	|> parse_with_error
+	|> List.map Ast.function_string
+	|> String.concat " "
+    |> print_string
+    |> print_newline
 
 let rec map_with_print f ls =
 	match ls with
@@ -42,3 +46,6 @@ let rec map_with_print f ls =
 				   f x :: map_with_print f xs
 
 let _ = map_with_print main test_files ; print_string "All tests passed! \n"
+
+
+(* makefile *)
