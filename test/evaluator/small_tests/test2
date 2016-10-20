@@ -1,0 +1,7 @@
+(* Testing the sequencing of numerical expressions *)
+main () :
+    5 + 5; 
+    7 * 7;
+    10 - 5;
+    9 / 3
+    (* the whole function should return 3 and ignore the results of the previous additions *)

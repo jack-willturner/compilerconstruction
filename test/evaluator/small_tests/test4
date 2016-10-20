@@ -1,0 +1,4 @@
+(* Checking that assignments work properly with global variables *)
+main () : 
+    x := 5;
+    y := x + 5

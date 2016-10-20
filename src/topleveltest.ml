@@ -1,6 +1,7 @@
 open Parser 
 open Lexer
 open Lexing
+open Evaluator
 
 let rec read_to_empty buf = 
 	let s = read_line () in 
@@ -14,7 +15,5 @@ let _ =
 	read_to_empty (Buffer.create 1)
 	|> Buffer.contents
 	|> Lexing.from_string
-	|> Parser.top Lexer.read (*
-	|> List.map Ast.function_string
-	|> String.concat ",\n"
-	|> print_endline *)
+	|> Parser.top Lexer.read
+	|> Evaluator.eval_prog

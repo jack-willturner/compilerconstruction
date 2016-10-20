@@ -1,7 +1,0 @@
-### Starting build.
-# Target: src/parser/test.ml.depends, tags: { extension:ml, file:src/parser/test.ml, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -modules src/parser/test.ml > src/parser/test.ml.depends # cached
-+ ocamlfind ocamlc -where > /Users/jackturner/work/compilers/compilerconstruction/_build/ocamlc.where
-/bin/sh: ocamlfind: command not found
-Command exited with code 127.
-# Compilation unsuccessful.

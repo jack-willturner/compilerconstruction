@@ -1,0 +1,7 @@
+(* Checking that while statements loop correctly *)
+main () : 
+    x := 5;
+    while(x <= 6) {
+        x := x + 1
+    }; 
+    x

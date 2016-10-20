@@ -1,0 +1,12 @@
+fib () :
+    countTo := 8;
+    i := 0;
+    j := 1;
+    k := 1;
+    while(k <= countTo) {
+        k := k + 1;
+        t := i  + j;
+        i := j;
+        j := t
+    }; 
+    j

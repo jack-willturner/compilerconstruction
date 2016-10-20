@@ -88,6 +88,7 @@ rule read =
 	| ','         { COMMA }
 	| id 	 	  { STRING (Lexing.lexeme lexbuf) }
 	| "read_int"  { READINT }
+	| "print_int" { PRINTINT }
 	| _ 		  { raise (SyntaxError ("Unexpected char: " ^
                      Lexing.lexeme lexbuf)) }
 	| eof 		  { EOF }

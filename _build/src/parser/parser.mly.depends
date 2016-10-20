@@ -1,2 +1,0 @@
-src/parser/parser.ml: Ast Lexing
-src/parser/parser.mli: Ast Lexing

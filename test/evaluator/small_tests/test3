@@ -1,0 +1,2 @@
+(* Checking that the evaluate constants *)
+main () : 5 
