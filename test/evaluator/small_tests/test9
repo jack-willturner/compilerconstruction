@@ -1,0 +1,4 @@
+(* Check that the dereferencing feature works *)
+main () :
+    x:= 100;
+    !x

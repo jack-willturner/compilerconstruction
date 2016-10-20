@@ -1,0 +1,9 @@
+(* Testing logical operators *)
+main () : 
+    x := 5;
+    y := 6;
+    if((x==x) and (x<=6)) {
+         x
+    } else {
+         y
+    }

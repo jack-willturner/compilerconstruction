@@ -1,0 +1,4 @@
+(* Test the printint function with identifier dereferencing *)
+main () : 
+    x := 5;
+    print_int x
