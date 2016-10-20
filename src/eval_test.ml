@@ -10,17 +10,17 @@ open Evaluator
 
 let fileno = ref 0
 
-let test_files = [("../test/evaluator/small_tests/test1", 10);   (* Tuple of test file and expected result *)
-                  ("../test/evaluator/small_tests/test2", 3);
-                  ("../test/evaluator/small_tests/test3", 5);
-                  ("../test/evaluator/small_tests/test4", 10);
-                  ("../test/evaluator/small_tests/test5", 7);
-                  ("../test/evaluator/small_tests/test6", 6);
-                  ("../test/evaluator/small_tests/test7", 1);
-                  ("../test/evaluator/small_tests/test8", 5);
-                  ("../test/evaluator/small_tests/test9", 100);
-                  ("../test/evaluator/small_tests/test10", 5);
-                  ("../test/evaluator/big_tests/fib", 34)]
+let test_files = [("test/evaluator/small_tests/test1", 10);   (* Tuple of test file and expected result *)
+                  ("test/evaluator/small_tests/test2", 3);
+                  ("test/evaluator/small_tests/test3", 5);
+                  ("test/evaluator/small_tests/test4", 10);
+                  ("test/evaluator/small_tests/test5", 7);
+                  ("test/evaluator/small_tests/test6", 6);
+                  ("test/evaluator/small_tests/test7", 1);
+                  ("test/evaluator/small_tests/test8", 5);
+                  ("test/evaluator/small_tests/test9", 100);
+                  ("test/evaluator/small_tests/test10", 5);
+                  ("test/evaluator/big_tests/fib", 34)]
 
 let rec read_to_empty buf in_channel =
 	Lexer.lineno := 1;
