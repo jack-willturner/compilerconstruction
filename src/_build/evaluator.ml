@@ -64,7 +64,7 @@ let r_not = function
 
 let rec find y = function
     | [] -> failwith "fail in find: Not Found."
-    | (x,x')::xs -> printf "Comparing %s with %s" x y; if x = y then x' else find y xs
+    | (x,x')::xs -> if x = y then x' else find y xs
 
 let rec delete y = function
     | [] -> []
@@ -121,8 +121,10 @@ let rec eval_exp env store = function
         v2
     | Application(Identifier f, act_params)-> 
         let (Fundef(n,exp_params,b)) = Hashtbl.find function_list f in 
-        let env' = eval_params env store exp_params act_params in
-        eval_fundef env' store (Fundef(n,exp_params,b))
+        let e1 = List.hd act_params in 
+        let v1 = eval_exp env store e1 in 
+        let s1 = List.hd exp_params in 
+        eval_fundef ((s1,v1)::env) store (Fundef(n,exp_params,b))
     | _                        -> failwith "Undefined evaluation"
 and eval_params env store expected_params actual_params  = match (expected_params, actual_params) with 
     | ([x],[y])          -> 
