@@ -1,10 +1,6 @@
 (* Variant of the possible return types  of a function *)
-open Printf;;
-open Ast;;
-
-let function_list = Hashtbl.create 5;; (* List to keep track of the functions and params *)
-
-type fd = Fundef of string * string list * expression;;
+let addr_gbl = ref 0
+let newref() = addr_gbl := add_gbl+1; !addr_gbl
 
 type return_value =  
 	| Empty
@@ -23,6 +19,7 @@ let unwrap_int = function
 let unwrap_string = function
     | String str -> str
     | _ -> failwith "Attempted to unwrap non-string";;
+
 
 (* Translation functions *)
 let lequal = function
@@ -43,8 +40,7 @@ let equal = function
     | String s1, String s2 -> s1 == s2
     | Boolean b1, Boolean b2 -> b1 == b2
     | _ , Empty -> false 
-    | Empty, _ -> false
-    | _, _ -> failwith "Comparing incompatible types";;
+    | Empty, _ -> false;;
 
 
 (* Logical operation unwrapping the Boolean type *)
@@ -59,6 +55,8 @@ let r_or = function
 let r_not = function
     | Boolean b1, _ -> not b1
     | _, _ -> failwith "Attempted NOT on non-boolean expressions";;
+
+
 
 (* val eval_exp: Ast.expression -> return_value *)
 let rec eval_exp env store = function
@@ -76,7 +74,7 @@ let rec eval_exp env store = function
            let v2 = eval_exp env store e2 in 
            v2
     | Identifier x             -> Hashtbl.find store x
-    | Deref exp                -> Hashtbl.find env (unwrap_string(eval_exp env store exp))
+    | Deref exp                -> Hashtbl.find env unwrap_string(eval_exp env store exp)
     | Operator(Plus, e1, e2)   -> Int (unwrap_int(eval_exp env store e1) + unwrap_int(eval_exp env store e2))   (* Basic operations *)
     | Operator(Minus, e1, e2)  -> Int (unwrap_int(eval_exp env store e1) - unwrap_int(eval_exp env store e2))
     | Operator(Times, e1, e2)  -> Int (unwrap_int(eval_exp env store e1) * unwrap_int(eval_exp env store e2))
@@ -88,54 +86,24 @@ let rec eval_exp env store = function
     | Operator(And, e1, e2)    -> Boolean (unwrap_bool(eval_exp env store e1) &&  unwrap_bool(eval_exp env store e2))
     | Operator(Or, e1, e2)     -> Boolean (unwrap_bool(eval_exp env store e1) ||  unwrap_bool(eval_exp env store e2))
     | Operator(Not, e1, e2)    -> Boolean (not(unwrap_bool(eval_exp env store e1)))
+    | Application(func, params)-> failwith "Application evaluation undefined"
     | Readint                  -> failwith "Readint evaluation undefined"
-    | Printint n               -> printf "%d\n" (unwrap_int (eval_exp env store n)); eval_exp env store n
+    | Printint n               -> printf "%d\n" (unwrap_int (eval_exp n)); eval_exp env store n
     | Let(s1,e1,e2)            -> 
         let v1 = eval_exp env store e1 in 
-        Hashtbl.add store s1 v1;
-        eval_exp env store e2
+        eval_exp env (Hashtbl.add env s1 v1)
     | New(s1,e1,e2)            -> 
-        let v1 = eval_exp env store e1 in 
-        Hashtbl.add env s1 v1;
-        eval_exp env store e2 
-    | Application(func, params)-> 
-        let func' = unwrap_string(eval_exp env store func) in
-        let params' = List.map (eval_exp env store) params in
-        let params'' = List.map unwrap_string params' in
-        let (expected_params, body) = Hashtbl.find function_list func' in 
-        eval_params env store expected_params params; 
-        let f = Fundef(func', params'', body) 
-        in eval_fundef f env store
+        let v1 = eval env store e1 in 
+        eval_exp (Hashtbl.add env s1 v1) store e2 
     | _                        -> failwith "Undefined evaluation"
-and eval_params env store expected_params actual_params  = match (expected_params, actual_params) with 
-    | ([x],[y]) -> 
-          let v1 = eval_exp env store y in 
-          Hashtbl.add store x v1 
-    | ((x::xs), (y::ys)) -> 
-          let v1     = eval_exp env store y in 
-          Hashtbl.add store x v1; 
-          eval_params env store xs ys
-    | _,_ -> failwith "Incorrect number of parameters"
-and eval_fundef Fundef(name, params, exp) env store = 
-    eval_exp env store exp;;
 
-let rec add_functions = function
-    | [] -> ()
-    | (name,params,body)::xs -> Hashtbl.add function_list name (params, body); add_functions xs
+
+let rec eval_fundef (name, params, exp) = 
+	let env = Hashtbl.create 100 in 
+	let store = Hashtbl.create 100 in
+    eval_exp env store exp;;
 
 (* Since a program is a list of functions, this loops through the list of functions in the file and evaluates them *)
 let rec eval_prog = function
      | []         -> []
-     | x::xs -> add_functions (x::xs);
-         let env = Hashtbl.create 100 in 
-	     let store = Hashtbl.create 100 in
-         eval_fundef x env store;;
-
-
-
-
-
-
-
-
-
+     | x::xs      -> eval_fundef x :: eval_prog xs;;
