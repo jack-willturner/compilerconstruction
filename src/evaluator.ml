@@ -4,8 +4,6 @@ open Ast;;
 
 let function_list = Hashtbl.create 5;; (* List to keep track of the functions and params *)
 
-type fd = Fundef of string * string list * expression;;
-
 type return_value =  
 	| Empty
 	| String of string
@@ -98,14 +96,18 @@ let rec eval_exp env store = function
         let v1 = eval_exp env store e1 in 
         Hashtbl.add env s1 v1;
         eval_exp env store e2 
-    | Application(func, params)-> 
+    | Application(func, params)-> (*
         let func' = unwrap_string(eval_exp env store func) in
         let params' = List.map (eval_exp env store) params in
         let params'' = List.map unwrap_string params' in
         let (expected_params, body) = Hashtbl.find function_list func' in 
-        eval_params env store expected_params params; 
-        let f = Fundef(func', params'', body) 
-        in eval_fundef f env store
+        if ((List.length expected_params) = (List.length params)) 
+        then 
+           let store' = eval_params env store expected_params params in 
+           let f = Fundef(func', params'', body) in
+           eval_fundef f env store
+        else failwith "Insufficient parameters provided" *)
+        failwith "Application not yet implemented"
     | _                        -> failwith "Undefined evaluation"
 and eval_params env store expected_params actual_params  = match (expected_params, actual_params) with 
     | ([x],[y]) -> 
@@ -116,19 +118,20 @@ and eval_params env store expected_params actual_params  = match (expected_param
           Hashtbl.add store x v1; 
           eval_params env store xs ys
     | _,_ -> failwith "Incorrect number of parameters"
-and eval_fundef Fundef(name, params, exp) env store = 
-    eval_exp env store exp;;
+and eval_fundef (name,params,body) env store = 
+    eval_exp env store body;;
 
-let rec add_functions = function
+let rec add_functions env store = function
     | [] -> ()
-    | (name,params,body)::xs -> Hashtbl.add function_list name (params, body); add_functions xs
+    | (name,params,body)::xs -> Hashtbl.add function_list "name" params
 
 (* Since a program is a list of functions, this loops through the list of functions in the file and evaluates them *)
 let rec eval_prog = function
-     | []         -> []
-     | x::xs -> add_functions (x::xs);
+     | []         -> Empty
+     | x::xs -> 
          let env = Hashtbl.create 100 in 
 	     let store = Hashtbl.create 100 in
+	     add_functions env store (x::xs);
          eval_fundef x env store;;
 
 
