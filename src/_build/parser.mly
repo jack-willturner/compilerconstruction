@@ -33,6 +33,8 @@
 %%
 
 exp:
+    | LET; x = STRING; ASSIGN; e = exp; IN; f = exp;                               { Let(x,e,f) }
+    | NEW; x = STRING; ASSIGN; e = exp; IN; f = exp;                               { New(x,e,f) }
     | e = params                                                                      { e }
     | e = INT                                                                         { Const e }
     | e = STRING                                                                      { Identifier e }
@@ -45,9 +47,8 @@ exp:
     | WHILE;      p = params; LBRACE; e = exp; RBRACE;                                { While (p, e) }
     | EXCLAMATION; e = exp                                                            { Deref e }
     | PRINTINT;   e = exp                                                             { Printint e }
-    | READINT;  			                                                          { Readint }
-    | LET; x = STRING; ASSIGN; e = exp; IN; f = exp;                               { Let(x,e,f) }
-    | NEW; x = STRING; ASSIGN; e = exp; IN; f = exp;                               { New(x,e,f) };;
+    | READINT;  			                                                                { Readint }
+;;
 
 
 params:
@@ -66,7 +67,7 @@ params:
   | OR       { Or };;
 
 fundef :
-	| name = STRING; LPAREN; params = separated_list(COMMA, STRING); RPAREN; COLON; e = exp; { (name, params, e) }
+	| name = STRING; LPAREN; params = separated_list(COMMA, STRING); RPAREN; COLON; e = exp; { Fundef(name, params, e) }
 
 top :
 	| el = separated_list(FULLSTOP, fundef); EOF { el }

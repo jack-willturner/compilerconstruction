@@ -1591,7 +1591,7 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.express
               let xs = xs0 in
                   ( xs )
             in
-                                                                                                      ( (name, params, e) ) in
+                                                                                                      ( Fundef(name, params, e) ) in
             let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
             let _menhir_stack = Obj.magic _menhir_stack in
             assert (Pervasives.(<>) _menhir_env._menhir_shifted (-1));
@@ -1656,7 +1656,7 @@ and _menhir_run13 : _menhir_env -> 'ttv_tail -> _menhir_state -> 'ttv_return =
   fun _menhir_env _menhir_stack _menhir_s ->
     let _ = _menhir_discard _menhir_env in
     let _menhir_stack = Obj.magic _menhir_stack in
-    let _v : (Ast.expression) =                                                                              ( Readint ) in
+    let _v : (Ast.expression) =                                                                                    ( Readint ) in
     _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
 
 and _menhir_run14 : _menhir_env -> 'ttv_tail -> _menhir_state -> 'ttv_return =

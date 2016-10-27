@@ -19,7 +19,7 @@ type expression =
   | Let of string * expression * expression (* let x = e in e *)
   | New of string * expression * expression (* new x = e in e *)
 
-type fundef = string * string list * expression
+type fundef = Fundef of string * string list * expression
 
 type program = fundef list
 
@@ -37,13 +37,12 @@ let opcode_string = function
   | Or -> "Or"
   | Not -> "Not"
 
-(*
+
 let rec exp_string = function
   | Empty -> "empty"
   | Seq (e, f) -> "Seq ( " ^ exp_string e ^ "; " ^ exp_string f ^ " ) "
   | While (e, f) -> "While ( " ^ exp_string e ^ " ) { " ^ exp_string f ^ " } "
   | If (e, f, g) -> "If ( " ^ exp_string e ^ " ) { " ^ exp_string f ^ " } Else { " ^ exp_string g ^ " } "
-  | Asg (e, f) -> "Asg ( " ^ exp_string e ^ " := " ^ exp_string f ^ " ) "
   | Deref e -> "Deref (" ^ exp_string e ^ ")"
   | Operator (Not, Empty, e) -> "Operator ( Not, " ^ exp_string e ^ " ) "
   | Operator (op, e, f) -> "Operator ( " ^ opcode_string op ^ ", " ^ exp_string e ^ ", " ^ exp_string f ^ " ) "
@@ -55,4 +54,4 @@ let rec exp_string = function
   | New (s, e, f) -> "New ( \"" ^ s ^ "\" = " ^ exp_string e ^ " ) In { " ^ exp_string f ^ " } "
 
 let function_string = function
-  | (name, args, body) -> name ^ " ( " ^ String.concat ", " args  ^ " ) { " ^ exp_string body ^ " }" *)
+  | (name, args, body) -> name ^ " ( " ^ String.concat ", " args  ^ " ) { " ^ exp_string body ^ " }" 
