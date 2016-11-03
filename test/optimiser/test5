@@ -1,0 +1,5 @@
+(* Ensuring that read_int does not get optimised *)
+main () :
+    let x := read_int in (
+        5 + !x
+    )

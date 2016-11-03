@@ -1,0 +1,3 @@
+(* Checking function call with no parameters *)
+main () : helper().
+helper () : 5

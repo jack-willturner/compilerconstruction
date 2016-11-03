@@ -1,2 +1,2 @@
 (* Checking scoping between multiple lets *)
-main () : let x := 5 in (let y := 5 in (x + y))
+main () : let x := 5 in (let y := 5 in (!x + !y))

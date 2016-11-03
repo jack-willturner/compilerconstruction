@@ -1,0 +1,7 @@
+(* Check dereferencing within assignments *)
+main () :
+    let x := 5 in (
+        let y := !x + 5 in (
+            !y + !x
+        )
+     )

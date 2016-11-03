@@ -3,6 +3,14 @@ type opcode =
   | Leq | Geq | Equal | Noteq
   | And | Or | Not
 
+(* Variant of the possible return types  of a function *)
+type return_value =
+  | Empty
+  | String of string
+  | Int of int
+  | Boolean of bool
+  | Pointer of int
+
 type expression =
   | Empty
   | Seq of expression * expression (* e; e *)
@@ -54,4 +62,4 @@ let rec exp_string = function
   | New (s, e, f) -> "New ( \"" ^ s ^ "\" = " ^ exp_string e ^ " ) In { " ^ exp_string f ^ " } "
 
 let function_string = function
-  | (name, args, body) -> name ^ " ( " ^ String.concat ", " args  ^ " ) { " ^ exp_string body ^ " }" 
+  | Fundef(name, args, body) -> name ^ " ( " ^ String.concat ", " args  ^ " ) { " ^ exp_string body ^ " }" 

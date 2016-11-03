@@ -30,7 +30,7 @@ let print_position lexbuf =
   eprintf "Line: %d, File: %d, Position: %d\n" !Lexer.lineno !fileno pos.pos_cnum
 
 let unwrap = function
-	| Evaluator.Int x    -> x
+	| Ast.Int x    -> x
 	| _        -> 0
 
 let parse_with_error lexbuf =

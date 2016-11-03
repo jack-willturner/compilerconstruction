@@ -1,0 +1,9 @@
+(* Testing dereferencing through multiple expressions *)
+main () :
+    let x := 5 in (
+        if (!x <= 10) {
+            1
+        } else {
+            0
+        }
+    )

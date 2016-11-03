@@ -1,0 +1,11 @@
+(* Testing logical operators *)
+main () :
+    let x := 5 in (
+      let y := 6 in (
+        if((!x==!x) and (!x<=6)) {
+             !x
+        } else {
+             !y
+        }
+      )
+    )

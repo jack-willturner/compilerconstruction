@@ -1,14 +1,10 @@
 ### Starting build.
-# Target: src/eval_test.ml.depends, tags: { extension:ml, file:src/eval_test.ml, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -modules src/eval_test.ml > src/eval_test.ml.depends
+# Target: src/optimiser_test.ml.depends, tags: { extension:ml, file:src/optimiser_test.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules src/optimiser_test.ml > src/optimiser_test.ml.depends
 # Target: src/ast.ml.depends, tags: { extension:ml, file:src/ast.ml, ocaml, ocamldep, quiet }
 ocamlfind ocamldep -modules src/ast.ml > src/ast.ml.depends # cached
 # Target: src/ast.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:src/ast.cmo, file:src/ast.ml, implem, ocaml, quiet }
 ocamlfind ocamlc -c -I src -o src/ast.cmo src/ast.ml # cached
-# Target: src/evaluator.ml.depends, tags: { extension:ml, file:src/evaluator.ml, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -modules src/evaluator.ml > src/evaluator.ml.depends # cached
-# Target: src/evaluator.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:src/evaluator.cmo, file:src/evaluator.ml, implem, ocaml, quiet }
-ocamlfind ocamlc -c -I src -o src/evaluator.cmo src/evaluator.ml # cached
 # Target: src/lexer.mll, tags: { extension:mll, file:src/lexer.mll, lexer, ocaml, ocamllex, quiet }
 /Users/jackturner/.opam/4.01.0/bin/ocamllex.opt -q src/lexer.mll # cached
 # Target: src/lexer.ml.depends, tags: { extension:ml, file:src/lexer.ml, ocaml, ocamldep, quiet }
@@ -23,26 +19,36 @@ ocamlfind ocamldep -modules src/parser.mli > src/parser.mli.depends # cached
 ocamlfind ocamlc -c -I src -o src/parser.cmi src/parser.mli # cached
 # Target: src/lexer.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:src/lexer.cmo, file:src/lexer.ml, implem, ocaml, quiet }
 ocamlfind ocamlc -c -I src -o src/lexer.cmo src/lexer.ml # cached
-# Target: src/eval_test.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:src/eval_test.cmo, file:src/eval_test.ml, implem, ocaml, quiet }
-ocamlfind ocamlc -c -I src -o src/eval_test.cmo src/eval_test.ml
-+ ocamlfind ocamlc -c -I src -o src/eval_test.cmo src/eval_test.ml
-File "src/eval_test.ml", line 66, characters 8-12:
+# Target: src/optimiser.ml.depends, tags: { extension:ml, file:src/optimiser.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules src/optimiser.ml > src/optimiser.ml.depends # cached
+# Target: src/evaluator.ml.depends, tags: { extension:ml, file:src/evaluator.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules src/evaluator.ml > src/evaluator.ml.depends # cached
+# Target: src/evaluator.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:src/evaluator.cmo, file:src/evaluator.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -I src -o src/evaluator.cmo src/evaluator.ml # cached
+# Target: src/optimiser.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:src/optimiser.cmo, file:src/optimiser.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -I src -o src/optimiser.cmo src/optimiser.ml # cached
+# Target: src/optimiser_test.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:src/optimiser_test.cmo, file:src/optimiser_test.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -I src -o src/optimiser_test.cmo src/optimiser_test.ml
++ ocamlfind ocamlc -c -I src -o src/optimiser_test.cmo src/optimiser_test.ml
+File "src/optimiser_test.ml", line 77, characters 8-12:
 Warning 10: this expression should have type unit.
 # Target: src/ast.cmx, tags: { compile, extension:cmx, extension:ml, file:src/ast.cmx, file:src/ast.ml, implem, native, ocaml, quiet }
 ocamlfind ocamlopt -c -I src -o src/ast.cmx src/ast.ml # cached
-# Target: src/evaluator.cmx, tags: { compile, extension:cmx, extension:ml, file:src/evaluator.cmx, file:src/evaluator.ml, implem, native, ocaml, quiet }
-ocamlfind ocamlopt -c -I src -o src/evaluator.cmx src/evaluator.ml # cached
 # Target: src/parser.ml.depends, tags: { extension:ml, file:src/parser.ml, ocaml, ocamldep, quiet }
 ocamlfind ocamldep -modules src/parser.ml > src/parser.ml.depends # cached
 # Target: src/parser.cmx, tags: { compile, extension:cmx, extension:ml, file:src/parser.cmx, file:src/parser.ml, implem, native, ocaml, quiet }
 ocamlfind ocamlopt -c -I src -o src/parser.cmx src/parser.ml # cached
 # Target: src/lexer.cmx, tags: { compile, extension:cmx, extension:ml, file:src/lexer.cmx, file:src/lexer.ml, implem, native, ocaml, quiet }
 ocamlfind ocamlopt -c -I src -o src/lexer.cmx src/lexer.ml # cached
-# Target: src/eval_test.cmx, tags: { compile, extension:cmx, extension:ml, file:src/eval_test.cmx, file:src/eval_test.ml, implem, native, ocaml, quiet }
-ocamlfind ocamlopt -c -I src -o src/eval_test.cmx src/eval_test.ml
-+ ocamlfind ocamlopt -c -I src -o src/eval_test.cmx src/eval_test.ml
-File "src/eval_test.ml", line 66, characters 8-12:
+# Target: src/evaluator.cmx, tags: { compile, extension:cmx, extension:ml, file:src/evaluator.cmx, file:src/evaluator.ml, implem, native, ocaml, quiet }
+ocamlfind ocamlopt -c -I src -o src/evaluator.cmx src/evaluator.ml # cached
+# Target: src/optimiser.cmx, tags: { compile, extension:cmx, extension:ml, file:src/optimiser.cmx, file:src/optimiser.ml, implem, native, ocaml, quiet }
+ocamlfind ocamlopt -c -I src -o src/optimiser.cmx src/optimiser.ml # cached
+# Target: src/optimiser_test.cmx, tags: { compile, extension:cmx, extension:ml, file:src/optimiser_test.cmx, file:src/optimiser_test.ml, implem, native, ocaml, quiet }
+ocamlfind ocamlopt -c -I src -o src/optimiser_test.cmx src/optimiser_test.ml
++ ocamlfind ocamlopt -c -I src -o src/optimiser_test.cmx src/optimiser_test.ml
+File "src/optimiser_test.ml", line 77, characters 8-12:
 Warning 10: this expression should have type unit.
-# Target: src/eval_test.native, tags: { dont_link_with, extension:native, file:src/eval_test.native, link, native, ocaml, program, quiet }
-ocamlfind ocamlopt -linkpkg src/ast.cmx src/evaluator.cmx src/parser.cmx src/lexer.cmx src/eval_test.cmx -o src/eval_test.native
+# Target: src/optimiser_test.native, tags: { dont_link_with, extension:native, file:src/optimiser_test.native, link, native, ocaml, program, quiet }
+ocamlfind ocamlopt -linkpkg src/ast.cmx src/evaluator.cmx src/parser.cmx src/lexer.cmx src/optimiser.cmx src/optimiser_test.cmx -o src/optimiser_test.native
 # Compilation successful.
