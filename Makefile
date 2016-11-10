@@ -1,10 +1,4 @@
-default: src/optimiser_test.native
-
-run_all: 
-	ocamlbuild -use-menhir -use-ocamlfind src/parser_test.native
-	./parser_test.native
-	ocamlbuild -use-menhir -use-ocamlfind src/optimiser_test.native
-	./optimiser_test.native
+default: src/codegen.native
 
 %.native:
 	eval `opam config env`
@@ -12,4 +6,9 @@ run_all:
 	./parser_test.native
 	ocamlbuild -use-menhir -use-ocamlfind src/optimiser_test.native
 	./optimiser_test.native
+	ocamlbuild -use-menhir -use-ocamlfind src/interpreter.native
+	./interpreter.native
+	ocamlbuild -use-menhir -use-ocamlfind src/codegen.native
+	./codegen.native
+
 
