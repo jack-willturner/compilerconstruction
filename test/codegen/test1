@@ -1,0 +1,7 @@
+(* Testing code generation for if statements *)
+main () :
+  if (3 >= 5) {
+    3
+  } else {
+    5
+  }

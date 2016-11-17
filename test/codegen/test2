@@ -1,0 +1,2 @@
+main () : plus5(2).
+plus5(x) : 5 + x

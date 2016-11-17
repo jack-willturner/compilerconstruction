@@ -28,7 +28,8 @@ let fun_of_op = function
 
 
 let rec lookup x symt = match symt with
-    | [] -> failwith "Not found in symbol table"
+    | [] -> printf "Looking for %s\n" x;
+                   failwith "Not found in symbol table"
     | ((str,addr)::xs) -> if (str = x) then addr else lookup x xs
 
 let rec interpret symt = function
@@ -65,8 +66,10 @@ let d1 = Operator(Leq, c1, c2)
 let if_x = If(d1, Const 5, Const 10)
 let let_x = Let ("x", op_plus, op_plus_x)
 
+(*
 let _ = addr_base := 0;
         let addr = interpret [] if_x in
         let result = find ram addr in
         printf "\nINTERPRETER TEST \n if(30 <= 40) then 5 else 10 ==> %i \n\n\n" result;
         result
+*)

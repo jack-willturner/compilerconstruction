@@ -7,14 +7,16 @@ void print(int x)
   exit(0);
 }
 
+int plus5(int x)
+{
+    return (x + 5);
+}
+
 int main ()
 {
     int myInt;
     scanf("%d", &myInt);
-    if(myInt <= 5) {
-        print(3);
-    } else {
-        print(5);
-    }
-  return 1;
+    plus5(myInt);
+    return 1;
 }
+
