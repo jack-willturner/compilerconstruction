@@ -5,6 +5,8 @@ open Buffer
 
 let sp = ref 0
 let lbbl_ctr = ref 0
+let if_ctr   = ref 0
+let labels = ref ""
 
 let code = Buffer.create 100
 let functions = Hashtbl.create 5
@@ -69,13 +71,12 @@ let codegen_prefix =
     Ltmp5:
             .cfi_def_cfa_register %rbp
             subq    $16, %rsp
-            movl    $0, -4(%rbp)
-
-      // GENERATED CODE \n"
+            movl    $0, -4(%rbp)\n"
 
 let codegen_suffix =
     "LBB1_3:
         popq %rdi
+        subq $1, %rdi
         callq _print
         movl $1, %eax
         addq $16, %rsp
@@ -175,11 +176,8 @@ let rec codegenx86 symt = function
   | While((Operator(op, e', e'')), e2) ->
     codegenx86 symt e';
     codegenx86 symt e'';
-    "LBBL_" ^ string_of_int(!lbbl_ctr) ^ ":\n" |> Buffer.add_string code;
-    lbbl_ctr := !lbbl_ctr + 1;
     codegenx86_if op;
     codegenx86 symt e2;
-    ("jmp LBBL_" ^ string_of_int(!lbbl_ctr - 1) ^ "\n") |> Buffer.add_string code;
     "LBBL_" ^ string_of_int(!lbbl_ctr) ^ ":\n" |> Buffer.add_string code;
     lbbl_ctr := !lbbl_ctr + 1
   | Application(Identifier f, e) ->

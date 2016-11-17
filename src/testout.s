@@ -40,14 +40,12 @@
             .cfi_def_cfa_register %rbp
             subq    $16, %rsp
             movl    $0, -4(%rbp)
-
-      // GENERATED CODE 
     pushq $3
     pushq $6
     popq %rax
     popq %rbx
     cmp %rax, %rbx
-    jge LBBL_2
+    jge LBBL_0
     pushq $4
     popq %rax
     pushq %rax
@@ -55,11 +53,10 @@
     movq -40(%rbp), %rax
     pushq %rax
     pushq $7
-    LBBL_0:
     popq %rax
     popq %rbx
     cmp %rax, %rbx
-    jge LBBL_1
+    jge LBBL_0
     //offset 3
     movq -40(%rbp), %rax
     pushq %rax
@@ -71,17 +68,17 @@
     popq %rax
     movq %rax, -40(%rbp)
     pushq %rax
-   jmp LBBL_0
-LBBL_1:
+LBBL_0:
     //offset 3
     movq -40(%rbp), %rax
     pushq %rax
-    jmp LBB1_3
-LBBL_2:
+jmp LBB1_3
+LBBL_1:
     pushq $-1
 jmp LBB1_3
 LBB1_3:
         popq %rdi
+        subq $1, %rdi
         callq _print
         movl $1, %eax
         addq $16, %rsp

@@ -7,7 +7,7 @@ open Codegen2
 
 let fileno = ref 0
 
-let test_files = [("../test/codegen/test3", 7)]  (* Tuple of test file and expected result *)
+let test_files = [("test/codegen/test3", 7)]  (* Tuple of test file and expected result *)
 
 let rec read_to_empty buf in_channel =
 	Lexer.lineno := 1;
