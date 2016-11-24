@@ -1,6 +1,6 @@
 main () :
     if(3 <= 6) {
-  	let x := 4 in (
+  	new x := 4 in (
    	 while(x <= 9) {
      	   x := x + 5
    	 };

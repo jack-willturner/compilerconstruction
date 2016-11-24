@@ -5,8 +5,6 @@ open Buffer
 
 let sp = ref 0
 let lbl_ctr = ref 0
-let if_ctr   = ref 0
-let labels = ref ""
 
 let code = Buffer.create 100
 let functions = Hashtbl.create 5
@@ -78,7 +76,6 @@ let codegen_prefix =
 let codegen_suffix =
     "LBB1_3:
         popq %rdi
-        subq $1, %rdi
         callq _print
         movl $1, %eax
         addq $16, %rsp
@@ -98,10 +95,10 @@ let string_of_operator = function
   | Minus -> "sub"
   | Times -> "mult"
   | Divide -> "div"
-  | Geq    -> "jle LBBL_" ^ string_of_int(!lbbl_ctr)
-  | Leq    -> "jge LBBL_" ^ string_of_int(!lbbl_ctr)
-  | Equal  -> "je  LBBL_" ^ string_of_int(!lbbl_ctr)
-  | Noteq  -> "jne LBBL_" ^ string_of_int(!lbbl_ctr)
+  | Geq    -> "jge"
+  | Leq    -> "jle"
+  | Equal  -> "je"
+  | Noteq  -> "jne"
   | _ -> "cmp"
 
 let codegenx86_op op =
@@ -110,15 +107,22 @@ let codegenx86_op op =
     "    " ^ (string_of_operator op) ^ " %rax, %rbx\n" ^
     "   pushq %rbx\n" |> Buffer.add_string code
 
-let codegenx86_if op =
+let codegenx86_id addr =
+  "    //offset " ^ (string_of_int addr) ^ "\n" ^
+  "    movq " ^ (-16  - 8 * addr |> string_of_int) ^ "(%rbp), %rax\n" ^
+  "    pushq %rax\n"
+  |> Buffer.add_string code
+
+let codegenx86_while op =
   "    popq %rax\n" ^
   "    popq %rbx\n" ^
-  "    cmp %rax, %rbx\n" ^
-  "    " ^ (string_of_operator op) ^ "\n"
-   |> Buffer.add_string code
+  "    cmp %rbx, %rax\n" ^
+  "    " ^ (string_of_operator op )
+  |> Buffer.add_string code
 
 let codegenx86_let _ =
   "    popq %rax\n" ^
+  "    popq %rbx\n" ^
   "    pushq %rax\n"
   |> Buffer.add_string code
 
@@ -132,15 +136,9 @@ let codegenx86_asg addr =
   "    pushq %rax\n"
   |> Buffer.add_string code
 
-let codegenx86_id addr =
-  "    //offset " ^ (string_of_int addr) ^ "\n" ^
-  "    movq " ^ (-16  - 8 * addr |> string_of_int) ^ "(%rbp), %rax\n" ^
-  "    pushq %rax\n"
-  |> Buffer.add_string code
-
 
 let rec codegenx86 symt = function
-  | Operator (op, e1, e2) ->
+  | Operator (op, e1, e2) ->   (* Plus, 1, 2 *)
     codegenx86 symt e1;
     codegenx86 symt e2;
     codegenx86_op op;
@@ -154,53 +152,87 @@ let rec codegenx86 symt = function
     sp := !sp + 1
   | Let(x, e1, e2) ->
     codegenx86 symt e1;
+    codegenx86 ((x, !sp) :: symt) e2;
+    codegenx86_let ()
+  (***** Assignment 7 *****)
+  | New(x, e1, e2) ->
+    codegenx86 symt e1;
     codegenx86_let ();
     codegenx86 ((x, !sp) :: symt) e2
-  (***** Assignment 6 *****)
   | Asg(Identifier x, e) ->
     let addr = lookup x symt in
     codegenx86 symt e;
     codegenx86_asg addr
-  | If((Operator(op, e', e'')), e2, e3) ->
-    codegenx86 symt e';
-    codegenx86 symt e'';
-    codegenx86_if op;
-    codegenx86 symt e2;
-    "jmp LBB1_3\n" ^
-    "LBBL_" ^ string_of_int(!lbbl_ctr) ^ ":\n"
-    |> Buffer.add_string code;
-    lbbl_ctr := !lbbl_ctr + 1;
-    codegenx86 symt e3;
-    "jmp LBB1_3\n" |> Buffer.add_string code
+  | If(e1, e2, e3) ->
+    let label1 = "LBBL_" ^ string_of_int(label()) in
+    let label2 = "LBBL_" ^ string_of_int(label()) in
+    let label3 = "LBBL_" ^ string_of_int(label()) in   (* EXAMPLE: *)
+                                                       (*    cmp rax rbx    *)
+    codegenx86_if symt e1; " " ^ label2 ^ " \n" ^      (*    jle lbl2       *)
+    label1 ^ ":\n" |> Buffer.add_string code;          (*    lbl1:          *)
+    codegenx86 symt e2;                                (*       expr2       *)
+    "    jmp " ^ label3 ^ "\n" ^                           (*       jmp lbl3    *)
+    label2 ^ ":\n"  |> Buffer.add_string code;         (*    lbl2:          *)
+    codegenx86 symt e3;                                (*       expr3       *)
+    "    jmp " ^ label3 ^ "\n"    ^                        (*       jmp lbl3    *)
+    label3 ^ ":\n" |> Buffer.add_string code           (*    lbl3:          *)
   | Seq(e1, e2) ->
     codegenx86 symt e1;
     codegenx86 symt e2
-  | While((Operator(op, e', e'')), e2) ->
-    codegenx86 symt e';
-    codegenx86 symt e'';
-    codegenx86_if op;
-    codegenx86 symt e2;
-    "LBBL_" ^ string_of_int(!lbbl_ctr) ^ ":\n" |> Buffer.add_string code;
-    lbbl_ctr := !lbbl_ctr + 1
+  | While(e1, e2) ->
+    let label1 = "LBBL_" ^ string_of_int(label()) in
+    let label2 = "LBBL_" ^ string_of_int(label()) in
+    label1 ^ ":\n" |> Buffer.add_string code;          (*    lbl1:          *)
+                                                       (*        cmp e' e'' *)
+    codegenx86_if symt e1;                             (*        jge lbl2   *)
+    " " ^ label2 ^ "\n" |> Buffer.add_string code;
+    codegenx86 symt e2;                                (*        expr2      *)
+    "    jmp " ^ label1 ^ "\n"  ^                          (*        jmp lbl1   *)
+    label2 ^ ":\n" |> Buffer.add_string code           (*    lbl2:          *)
   | Application(Identifier f, e) ->
     let Fundef(name, params, body) = Hashtbl.find functions f in
-    let arg = List.hd e in
-    "pushq $" ^ string_of_int(unwrap_int(arg)) ^ "\n" ^ (* push arg onto stack *)
-    "pushq %rbp\n" ^ (* push instruction pointer *)
-    "jmp " ^ f ^ "\n" |> Buffer.add_string code;
-    codegenx86_fundef (Fundef(name,params,body))
+    let hd_param = List.hd params in
+    let hd_act   = List.hd e in
+    let addr     = !sp in
+
+    codegenx86 symt hd_act;
+    "    popq %rax\n" ^
+    "    pushq %rax\n" ^
+    "    movq %rax, " ^(-16 - 8 * addr |> string_of_int) ^ "(%rbp)\n" ^
+    "    callq " ^ name ^ " \n" |> Buffer.add_string code;
+    sp := !sp - 1
   | _ -> failwith "Not implemented"
-and codegenx86_fundef = function
+
+
+
+
+and codegenx86_fundef symt = function
   | Fundef(n,p,b) ->
     if (n = "main")
-    then codegenx86 [] b
+    then codegenx86 symt b
     else
       (n ^ ":\n" |> Buffer.add_string code;
-      codegenx86 [] b;
-      "popq %rax\n" ^
-      "retq \n"
+      codegenx86 symt b;
+      "    popq %rax\n" ^
+      "    retq \n"
       |> Buffer.add_string code )
 
+
+
+and codegenx86_if symt = function
+  | Operator(op, e1, e2) ->
+    codegenx86 symt e1;
+    codegenx86 symt e2;
+    "    popq %rax\n" ^
+    "    popq %rbx\n" ^
+    "    cmp %rbx, %rax\n" ^
+    "    " ^ (string_of_operator op )
+     |> Buffer.add_string code
+  | exp ->
+    codegenx86 symt exp;
+    "popq %rax\n" ^
+    "cmp $1, %rax\n" ^
+    "jne" |> Buffer.add_string code
 
 let rec add_functions = function
     | [] -> ()
@@ -212,4 +244,5 @@ let rec codegenx86_prog = function
   | [] -> codegen_prefix ^ Buffer.contents code ^ codegen_suffix
   | x::xs -> add_functions(x::xs);
     match x with
-      | Fundef(n,p,b) -> (codegenx86_fundef (Fundef(n,p,b))); codegenx86_prog xs
+      | Fundef(n,p,b) -> (codegenx86_fundef [] (Fundef(n,p,b))); 
+                         codegen_prefix ^ Buffer.contents code ^ codegen_suffix

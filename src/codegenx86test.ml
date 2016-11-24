@@ -2,12 +2,12 @@ open Lexing
 open Lexer
 open Printf
 open Ast
-open Codegen2
+open Codegen3
 
 
 let fileno = ref 0
 
-let test_files = [("test/codegen/test3", 7)]  (* Tuple of test file and expected result *)
+let test_files = [("codegentest", 7)]  (* Tuple of test file and expected result *)
 
 let rec read_to_empty buf in_channel =
 	Lexer.lineno := 1;
@@ -45,7 +45,7 @@ let run_test (filename, expected_result) =
 	|> Buffer.contents
 	|> Lexing.from_string
 	|> parse_with_error
-	|> Codegen2.codegenx86_prog in
+	|> Codegen3.codegenx86_prog in
   let out_channel = open_out "testout.s" in
   fprintf out_channel "%s" actual_result;
   close_out out_channel
