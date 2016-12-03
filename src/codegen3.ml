@@ -192,6 +192,14 @@ let rec codegenx86 symt = function
     codegenx86 symt e1;
     codegenx86_new ();
     codegenx86 ((x, !sp) :: symt) e2
+  | Asg(ArrayAccess(name,index), e) ->
+    let addr = lookup name symt in
+    (match index with
+      | Const n ->   codegenx86 symt e;
+        "    popq %rax\n" ^
+        "    movq %rax, " ^ ((-((addr * 16) - ((n-1) * 16))) |> string_of_int )^ "(%rbp)\n" |> Buffer.add_string code
+      | _ -> failwith "Non integer array index provided"
+    )
   | Asg(Identifier x, e) ->
     let addr = lookup x symt in
     codegenx86 symt e;

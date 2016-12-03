@@ -52,19 +52,10 @@
     pushq $1
     popq %rax
     movq %rax, -64(%rbp)
-    pushq $8
-    popq %rax
-    movq %rax, -80(%rbp)
-    pushq $7
-    popq %rax
-    movq %rax, -96(%rbp)
-    pushq $6
-    popq %rax
-    movq %rax, -112(%rbp)
     pushq $5
     popq %rax
-    movq %rax, -128(%rbp)
-     movq -96(%rbp), %rax
+    movq %rax, -64(%rbp)
+     movq -64(%rbp), %rax
      pushq %rax
      movq -48(%rbp), %rax
      pushq %rax
@@ -72,8 +63,6 @@
    popq %rbx
     add %rax, %rbx
    pushq %rbx
-    popq %rax
-    pushq %rax
     popq %rax
     pushq %rax
 LBB1_3:
