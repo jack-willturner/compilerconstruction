@@ -5,6 +5,7 @@ type token =
   | TIMES
   | STRING of (string)
   | SEMIC
+  | RSQUARE
   | RPAREN
   | READINT
   | RBRACE
@@ -15,6 +16,7 @@ type token =
   | NOT
   | NEW
   | MINUS
+  | LSQUARE
   | LPAREN
   | LET
   | LEQ
@@ -24,6 +26,7 @@ type token =
   | IF
   | GEQ
   | FULLSTOP
+  | FOR
   | EXCLAMATION
   | EQUAL
   | EOF
@@ -32,6 +35,7 @@ type token =
   | COMMA
   | COLON
   | ASSIGN
+  | ARROW
   | AND
 
 

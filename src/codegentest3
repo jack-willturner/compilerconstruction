@@ -1,7 +1,6 @@
 main () :
-  new x := 1 in (
-    while(x <= 6) {
-       x := plus5(x)
-    }
-  ).
-plus5(x) : x + 5
+     new x := 1 in (
+        for(1 -> 10) {
+           x := x + 1
+        }
+     )

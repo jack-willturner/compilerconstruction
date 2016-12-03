@@ -40,42 +40,42 @@
             .cfi_def_cfa_register %rbp
             subq    $16, %rsp
             movl    $0, -4(%rbp)
+    pushq $4
+    popq %rax
+    movq %rax, -16(%rbp)
+    pushq $3
+    popq %rax
+    movq %rax, -32(%rbp)
+    pushq $2
+    popq %rax
+    movq %rax, -48(%rbp)
     pushq $1
     popq %rax
-    pushq %rax
-lbl0:
-    //offset 1
-    movq -24(%rbp), %rax
-    pushq %rax
+    movq %rax, -64(%rbp)
+    pushq $8
+    popq %rax
+    movq %rax, -80(%rbp)
+    pushq $7
+    popq %rax
+    movq %rax, -96(%rbp)
     pushq $6
     popq %rax
-    popq %rbx
-    cmp %rbx, %rax
-    jle lbl1
-    //offset 1
-    movq -24(%rbp), %rax
-    pushq %rax
-    popq %rax
-    movq %rax, -40(%rbp)
-call	plus5
-jmp lbl2
-plus5:
-    //offset 3
-    movq -40(%rbp), %rax
-    pushq %rax
+    movq %rax, -112(%rbp)
     pushq $5
+    popq %rax
+    movq %rax, -128(%rbp)
+     movq -96(%rbp), %rax
+     pushq %rax
+     movq -48(%rbp), %rax
+     pushq %rax
    popq %rax
    popq %rbx
     add %rax, %rbx
    pushq %rbx
     popq %rax
-    retq 
-lbl2: 
-pushq	%rax
+    pushq %rax
     popq %rax
-    movq %rax, -24(%rbp)
-    jmp lbl0
-lbl1:
+    pushq %rax
 LBB1_3:
         popq %rdi
         callq _print

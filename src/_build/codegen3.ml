@@ -132,10 +132,15 @@ let codegenx86_let _ =
   "    pushq %rax\n"
   |> Buffer.add_string code
 
-  let codegenx86_new _ =
-    "    popq %rax\n" ^
-    "    pushq %rax\n"
-    |> Buffer.add_string code
+let codegenx86_print _ =
+  "    popq %rdi\n" ^
+  "    callq print\n"
+  |> Buffer.add_string code
+
+let codegenx86_new _ =
+  "    popq %rax\n" ^
+  "    pushq %rax\n"
+  |> Buffer.add_string code
 
 let codegenx86_st n =
   "    pushq $" ^ (string_of_int n) ^ "\n"
@@ -152,10 +157,29 @@ let rec codegenx86 symt = function
     codegenx86 symt e2;
     codegenx86_op op;
     sp := !sp - 1
+  | Array(el) ->
+      let size_of_array = (List.length el) in
+      let el' = List.rev el in
+      for i = 1 to size_of_array do
+        let e = List.nth el' (i-1) in
+        codegenx86 symt e;
+        "    popq %rax\n" ^
+        "    movq %rax, " ^ string_of_int (-(!sp * 16)) ^ "(%rbp)\n" |> Buffer.add_string code;
+      done
+  | Printint n ->
+    codegenx86 symt n;
+    codegenx86_print ()
   | Identifier x ->
     let addr = lookup x symt in
     codegenx86_id (addr);
     sp := !sp + 1
+  | ArrayAccess(name, index) ->
+    let addr = lookup name symt in
+    (match index with
+      | Const n -> "     movq " ^ ( -((addr * 16) - ((n-1) * 16))  |> string_of_int) ^ "(%rbp), %rax\n" ^
+                   "     pushq %rax\n" |> Buffer.add_string code
+      | _       -> failwith "life"
+    )
   | Const n ->
     codegenx86_st n;
     sp := !sp + 1
@@ -207,6 +231,33 @@ let rec codegenx86 symt = function
     codegenx86 symt e2;                                (*        expr2      *)
     "    jmp " ^ label1 ^ "\n"  ^                      (*        jmp lbl1   *)
     label2 ^ ":\n" |> Buffer.add_string code           (*    lbl2:          *)
+  | For(i, i', e1) ->
+      (* lbl1:        *)
+      (*    cmp i, i' *)
+      (*    jge lbl2  *)
+      (*    e1        *)
+      (*    jmp lbl1  *)
+      (* lbl2:        *)
+
+      let label1 = "lbl" ^ string_of_int(label()) in
+      let label2 = "lbl" ^ string_of_int(label())in
+
+      "    pushq $" ^ (string_of_int i) ^ "\n" ^
+      label1 ^ ":\n" ^
+      "    popq %rax\n" ^
+      "    pushq $" ^ (string_of_int i') ^ "\n" ^
+      "    popq %rbx\n" ^
+      "    cmp %rbx, %rax\n"  ^
+      "    jge " ^ label2 ^ "\n" ^
+      "    addq $1, %rax\n" ^
+      "    pushq %rax\n" |> Buffer.add_string code;
+
+      codegenx86 symt e1;
+
+      "    jmp " ^ label1 ^ "\n" ^
+      label2 ^ ":\n" |> Buffer.add_string code
+
+
   | Application(e1, params) ->
                           (match e1 with
                             | Identifier v ->

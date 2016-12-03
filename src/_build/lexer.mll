@@ -54,44 +54,48 @@ let id = letter+ digit*
 
 rule read =
 	parse
-	| white 	  { read lexbuf }
-	| newline 	  { incr lineno; read lexbuf }
-	| int 		  { INT (int_of_string (Lexing.lexeme lexbuf)) }
-	| '+' 		  { PLUS }
-	| '*' 		  { TIMES }
-	| '/' 		  { DIV }
-	| '-'		  { MINUS }
-	| ';'		  { SEMIC }
-	| ':'		  { COLON }
-	| "and"   	  { AND }
-	| "or" 	  	  { OR }
-	| "not"		  { NOT }
-	| "<="		  { LEQ }
-	| ">=" 		  { GEQ }
-	| "=="		  { EQUAL }
-	| "!="        { NOTEQUAL }
-	| '('	 	  { LPAREN }
-	| ')'		  { RPAREN }
-	| '{'		  { LBRACE }
-	| '}'         { RBRACE }
-	| ":="		  { ASSIGN }
-	| "let"	  	  { LET }
-	| "if"		  { IF }
-	| "else"	  { ELSE }
-	| '!'		  { EXCLAMATION}
-	| "while"	  { WHILE }
-	| "in"        { IN }
-	| "new"	  	  { NEW }
-	| "(*"		  { comment lexbuf; read lexbuf}
-	| "*)"        { read lexbuf }
-	| '.'		  { FULLSTOP }
-	| ','         { COMMA }
-	| id 	 	  { STRING (Lexing.lexeme lexbuf) }
-	| "read_int"  { READINT }
-	| "print_int" { PRINTINT }
-	| _ 		  { raise (SyntaxError ("Unexpected char: " ^
+	| white 	  		{ read lexbuf }
+	| newline 	  	{ incr lineno; read lexbuf }
+	| int 		  		{ INT (int_of_string (Lexing.lexeme lexbuf)) }
+	| '+'						{ PLUS }
+	| '*' 		  		{ TIMES }
+	| '/' 		  		{ DIV }
+	| '-'		  			{ MINUS }
+	| ';'		  			{ SEMIC }
+	| ':'		  			{ COLON }
+	| "and"   	  	{ AND }
+	| "or" 	  	 	  { OR }
+	| "not"		 		 	{ NOT }
+	| "<="		  		{ LEQ }
+	| ">=" 		 			{ GEQ }
+	| "=="		 		  { EQUAL }
+	| "!="       		{ NOTEQUAL }
+	| '('	 	 				{ LPAREN }
+	| ')'		 				{ RPAREN }
+	| '{'		  			{ LBRACE }
+	| '}'        	  { RBRACE }
+	| '['						{ LSQUARE }
+	| ']' 					{ RSQUARE }
+	| ":="		  		{ ASSIGN }
+	| "->"					{ ARROW }
+	| "let"	  	  	{ LET }
+	| "if"		 			{ IF }
+	| "else"	  		{ ELSE }
+	| '!'		  			{ EXCLAMATION}
+	| "while"	  		{ WHILE }
+	| "for"         { FOR }
+	| "in"        	{ IN }
+	| "new"	  	  	{ NEW }
+	| "(*"		  		{ comment lexbuf; read lexbuf}
+	| "*)"        	{ read lexbuf }
+	| '.'		 				{ FULLSTOP }
+	| ','         	{ COMMA }
+	| id 	 	  			{ STRING (Lexing.lexeme lexbuf) }
+	| "read_int"  	{ READINT }
+	| "print_int" 	{ PRINTINT }
+	| _ 		  			{ raise (SyntaxError ("Unexpected char: " ^
                      Lexing.lexeme lexbuf)) }
-	| eof 		  { EOF }
+	| eof 		  		{ EOF }
 
 
 and comment =

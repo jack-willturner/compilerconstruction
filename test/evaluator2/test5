@@ -1,3 +1,6 @@
 (* Check basic dereferencing and function application *)
-main () : plus5(2).
-plus5(x) : 5 + !x
+main () : plus5(2); plus5(2).
+sumList(x) : 
+    new y := 0 in (
+        while(y <= 5) { 
+            
