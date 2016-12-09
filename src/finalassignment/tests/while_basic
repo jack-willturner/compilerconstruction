@@ -1,0 +1,7 @@
+main() :
+  new x := 5 in
+  let y := 10 in(
+  while (x <= y) {
+    x := x + 112309
+  };
+  x)

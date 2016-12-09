@@ -40,30 +40,36 @@
             .cfi_def_cfa_register %rbp
             subq    $16, %rsp
             movl    $0, -4(%rbp)
-    pushq $4
-    popq %rax
-    movq %rax, -16(%rbp)
     pushq $3
     popq %rax
-    movq %rax, -32(%rbp)
+    movq %rax, 0(%rbp)
     pushq $2
     popq %rax
-    movq %rax, -48(%rbp)
+    movq %rax, -8(%rbp)
     pushq $1
     popq %rax
-    movq %rax, -64(%rbp)
+    movq %rax, -16(%rbp)
+    pushq $7
+    popq %rax
+    movq %rax, -24(%rbp)
+    pushq $6
+    popq %rax
+    movq %rax, -32(%rbp)
     pushq $5
     popq %rax
-    movq %rax, -64(%rbp)
-     movq -64(%rbp), %rax
-     pushq %rax
-     movq -48(%rbp), %rax
-     pushq %rax
-   popq %rax
-   popq %rbx
-    add %rax, %rbx
-   pushq %rbx
+    movq %rax, -40(%rbp)
+    pushq $4
     popq %rax
+    movq %rax, -48(%rbp)
+    pushq $4
+    popq %rax
+    movq -56(%rbp, %rax, 8), %rax
+    pushq %rax
+    popq %rax
+    popq %rbx
+    pushq %rax
+    popq %rax
+    popq %rbx
     pushq %rax
 LBB1_3:
         popq %rdi

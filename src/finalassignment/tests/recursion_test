@@ -1,0 +1,9 @@
+main () :
+  five(1).
+five(x) :
+  if(x <= 5) {
+    let y := x + 1 in
+    five(x)
+  } else {
+    6
+  }

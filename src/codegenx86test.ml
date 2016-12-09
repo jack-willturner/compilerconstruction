@@ -1,3 +1,5 @@
+
+
 open Lexing
 open Lexer
 open Printf
@@ -7,7 +9,7 @@ open Codegen3
 
 let fileno = ref 0
 
-let test_files = [("codegentest", 7)]  (* Tuple of test file and expected result *)
+let test_files = [("tests/codegentest1", 7)]  (* Tuple of test file and expected result *)
 
 let rec read_to_empty buf in_channel =
 	Lexer.lineno := 1;

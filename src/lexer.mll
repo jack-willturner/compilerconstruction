@@ -46,7 +46,7 @@ let exp = ['e' 'E'] ['-' '+']? digit+
 let float = digit* frac? exp?
 
 let white = [' ' '\t']+
-let newline = '\r' | '\n' | "\r\n"
+let newline = "\r" | "\n" | "\r\n"
 let id = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*
 
 let letter = ['a'-'z' 'A'-'Z']
@@ -55,7 +55,7 @@ let id = letter+ digit*
 rule read =
 	parse
 	| white 	  		{ read lexbuf }
-	| newline 	  	{ incr lineno; read lexbuf }
+	| newline 	  	{ read lexbuf }
 	| int 		  		{ INT (int_of_string (Lexing.lexeme lexbuf)) }
 	| '+'						{ PLUS }
 	| '*' 		  		{ TIMES }

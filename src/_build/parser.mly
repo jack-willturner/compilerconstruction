@@ -16,8 +16,8 @@
 %token              EOF
 
 %left               SEMIC
+%right              IN
 %right              ASSIGN
-%left               ARROW
 %left               OR
 %left               AND
 %right              EQUAL NOTEQUAL
@@ -27,7 +27,6 @@
 %left               TIMES DIV
 %right              EXCLAMATION
 %right              NOT
-%left               IN
 %right              LPAREN
 
 %start <Ast.program> top

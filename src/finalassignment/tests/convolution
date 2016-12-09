@@ -1,0 +1,23 @@
+convolve() :
+  new x := [1,2,3,4,5] in
+  new y := [6,7,8,9,10] in
+  new result := [0,0,0,0,0] in
+  let counter := 1 in
+  new kmin := 0 in
+  new kmax := 0 in
+  for(1 -> 10) {
+    if(counter >= 4) {
+        kmin := counter - 4
+    } else {
+        kmin := 0
+    };
+    if(counter <= 3) {
+        kmax := counter
+    } else {
+        kmax := 4
+    };
+    new k := kmin in
+    while(k <= kmax) {
+       result[k] := result[k] + (x[k] * y[(counter-k)])
+    }
+  }

@@ -129,6 +129,7 @@ let codegenx86_while op =
 
 let codegenx86_let _ =
   "    popq %rax\n" ^
+  "    popq %rbx\n" ^
   "    pushq %rax\n"
   |> Buffer.add_string code
 
@@ -164,7 +165,7 @@ let rec codegenx86 symt = function
         let e = List.nth el' (i-1) in
         codegenx86 symt e;
         "    popq %rax\n" ^
-        "    movq %rax, " ^ string_of_int (-(!sp * 16)) ^ "(%rbp)\n" |> Buffer.add_string code;
+        "    movq %rax, " ^ string_of_int (-(!sp * 8) +8) ^ "(%rbp)\n" |> Buffer.add_string code;
       done
   | Printint n ->
     codegenx86 symt n;
@@ -175,23 +176,22 @@ let rec codegenx86 symt = function
     sp := !sp + 1
   | ArrayAccess(name, index) ->
     let addr = lookup name symt in
-    (match index with
-      | Const n -> "     movq " ^ ( -((addr * 16) - ((n-1) * 16))  |> string_of_int) ^ "(%rbp), %rax\n" ^
-                   "     pushq %rax\n" |> Buffer.add_string code
-      | _       -> failwith "life"
-    )
+    codegenx86 symt index;
+      "    popq %rax\n" ^
+      "    movq " ^ ( -(addr * 8)  |> string_of_int) ^ "(%rbp, %rax, 8), %rax\n" ^
+      "    pushq %rax\n" |> Buffer.add_string code
   | Const n ->
     codegenx86_st n;
     sp := !sp + 1
   | Let(x, e1, e2) ->
     codegenx86 symt e1;
     codegenx86 ((x, !sp) :: symt) e2;
-    codegenx86_let ()
+    codegenx86_let ();
   (***** Assignment 7 *****)
   | New(x, e1, e2) ->
-    codegenx86 symt e1;
-    codegenx86_new ();
-    codegenx86 ((x, !sp) :: symt) e2
+          codegenx86 symt e1;
+          codegenx86 ((x, !sp) :: symt) e2;
+          codegenx86_new ();
   | Asg(ArrayAccess(name,index), e) ->
     let addr = lookup name symt in
     (match index with
@@ -212,13 +212,14 @@ let rec codegenx86 symt = function
     codegenx86_if symt e1; " " ^ label2 ^ " \n" ^      (*    jle lbl2       *)
     label1 ^ ":\n" |> Buffer.add_string code;          (*    lbl1:          *)
     codegenx86 symt e2;                                (*       expr2       *)
-    "    jmp " ^ label3 ^ "\n" ^                           (*       jmp lbl3    *)
+    "    jmp " ^ label3 ^ "\n" ^                       (*       jmp lbl3    *)
     label2 ^ ":\n"  |> Buffer.add_string code;         (*    lbl2:          *)
     codegenx86 symt e3;                                (*       expr3       *)
-    "    jmp " ^ label3 ^ "\n"    ^                        (*       jmp lbl3    *)
+    "    jmp " ^ label3 ^ "\n"    ^                    (*       jmp lbl3    *)
     label3 ^ ":\n" |> Buffer.add_string code           (*    lbl3:          *)
   | Seq(e1, e2) ->
     codegenx86 symt e1;
+    "    popq %rax\n" |> Buffer.add_string code;
     codegenx86 symt e2
   | While(e1, e2) ->
     let label1 = "lbl" ^ string_of_int(label()) in
@@ -230,8 +231,6 @@ let rec codegenx86 symt = function
     label1 ^ ":\n" |> Buffer.add_string code;
     codegenx86_if symt e1;
     " " ^ label2 ^ "\n" |> Buffer.add_string code *)
-
-
     label1 ^ ":\n" |> Buffer.add_string code;          (*    lbl1:          *)
                                                        (*        cmp e' e'' *)
     codegenx86_if symt e1;                             (*        jge lbl2   *)
@@ -285,17 +284,18 @@ let rec codegenx86 symt = function
                               )
                             else
                                 let label1 = string_of_int(label()) in
-                                "call " ^ v  ^ "\n" ^
-                                "jmp lbl" ^ label1 ^ "\n"
+                                "    call " ^ v  ^ "\n" ^
+                                "    jmp lbl" ^ label1 ^ "\n"
                                 |> Buffer.add_string code
                                 ;
                                 codegenx86_fundef symt (Fundef(name,args,body));
                                 "lbl" ^ label1 ^ ": \n" |> Buffer.add_string code
                             | _ -> failwith "Application"
                           );
-                          "pushq	%rax\n" |> Buffer.add_string code;
+                          "    pushq	%rax\n" |> Buffer.add_string code;
                           sp := !sp + 1
-
+  | Readint -> "    callq _scanf\n" ^
+               "    pushq %rdx\n" |> Buffer.add_string code;
   | _ -> failwith "Not implemented"
 
 
