@@ -2,12 +2,23 @@ open Lexing
 open Lexer
 open Printf
 open Ast
+open Optimiser
 open Codegen3
 
 
 let fileno = ref 0
 
-let test_files = [("codegentest", 7)]  (* Tuple of test file and expected result *)
+let test_files = [(*("tests/array_basic", 7)       *)
+								(*  ("tests/if_basic", 0)          *)
+								(*	("tests/while_basic", 0)       *)
+								(*	("tests/functions_basic", 0)   *)
+								(*	("tests/long_test", 0)         *)
+								(*	("tests/array_advanced",0)     *)
+								(*	("tests/average", 0)          *)
+								(*	("tests/for_basic",0) *)
+								(* ("tests/convolution",0) *)
+								(*  ("tests/memoisation_basic",0) *)
+								 ("tests/fizzbuzz", 0) ]  (* Tuple of test file and expected result *)
 
 let rec read_to_empty buf in_channel =
 	Lexer.lineno := 1;
@@ -45,10 +56,9 @@ let run_test (filename, expected_result) =
 	|> Buffer.contents
 	|> Lexing.from_string
 	|> parse_with_error
-	|> Codegen3.codegenx86_prog in
-  let out_channel = open_out "testout.s" in
-  fprintf out_channel "%s" actual_result;
-  close_out out_channel
+	|> Optimiser.optimise_prog
+	|> Evaluator.eval_prog in
+	printf "done\n"
 
   (*if (expected_result == (unwrap(List.hd actual_result)))
   then printf "%s passed test!\n" filename

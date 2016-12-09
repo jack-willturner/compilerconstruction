@@ -100,7 +100,7 @@ let codegen_suffix =
 let string_of_operator = function
   | Plus -> "add"
   | Minus -> "sub"
-  | Times -> "mult"
+  | Times -> "imul"
   | Divide -> "div"
   | Geq    -> "jge"
   | Leq    -> "jle"
@@ -129,12 +129,12 @@ let codegenx86_while op =
 
 let codegenx86_let _ =
   "    popq %rax\n" ^
-    "    pushq %rax\n"
+  "    pushq %rax\n"
   |> Buffer.add_string code
 
 let codegenx86_print _ =
   "    popq %rdi\n" ^
-  "    callq print\n"
+  "    callq _print\n"
   |> Buffer.add_string code
 
 let codegenx86_new _ =
@@ -146,12 +146,19 @@ let codegenx86_st n =
   "    pushq $" ^ (string_of_int n) ^ "\n"
   |> Buffer.add_string code
 
+let codegenx86_deref _ =
+  "\tpopq\t%rbx\n" ^
+"\tmovq\t(%rbx), %rax\n" ^
+"\tpushq\t%rax\n"
+|> Buffer.add_string code
+
 let codegenx86_asg addr =
   "    popq %rax\n" ^
   "    movq %rax, " ^ (-16 - 8 * addr |> string_of_int) ^ "(%rbp)\n"
   |> Buffer.add_string code
 
 let rec codegenx86 symt = function
+  | Empty -> ()
   | Operator (op, e1, e2) ->   (* Plus, 1, 2 *)
     codegenx86 symt e1;
     codegenx86 symt e2;
@@ -166,6 +173,9 @@ let rec codegenx86 symt = function
         "    popq %rax\n" ^
         "    movq %rax, " ^ string_of_int (-(!sp * 8) +8) ^ "(%rbp)\n" |> Buffer.add_string code;
       done
+  | Deref x ->
+    codegenx86 symt x;
+    codegenx86_deref ()
   | Printint n ->
     codegenx86 symt n;
     codegenx86_print ()
@@ -180,6 +190,7 @@ let rec codegenx86 symt = function
       "    movq " ^ ( -(addr * 8)  |> string_of_int) ^ "(%rbp, %rax, 8), %rax\n" ^
       "    pushq %rax\n" |> Buffer.add_string code
   | Const n ->
+    "    // offset " ^ (string_of_int !sp) ^ "\n" |> Buffer.add_string code;
     codegenx86_st n;
     sp := !sp + 1
   | Let(x, e1, e2) ->
@@ -197,7 +208,12 @@ let rec codegenx86 symt = function
       | Const n ->   codegenx86 symt e;
         "    popq %rax\n" ^
         "    movq %rax, " ^ ((-((addr * 16) - ((n-1) * 16))) |> string_of_int )^ "(%rbp)\n" |> Buffer.add_string code
-      | _ -> failwith "Non integer array index provided"
+      | _ ->
+         codegenx86 symt e;
+         codegenx86 symt index;
+         "    popq %rax\n" ^
+         "    popq %rbx\n" ^
+         "    movq " ^  string_of_int (-(addr) +8) ^ "(%rbp, %rax, 8), %rax\n" |> Buffer.add_string code
     )
   | Asg(Identifier x, e) ->
     let addr = lookup x symt in

@@ -2,9 +2,16 @@
 Just run `make` to run the latest set of tests. This will build the parser and optimiser and run the test programs through both. Use the tag `run_all` to run all of the previous tests.
 
 
-# Assignment 1: Parsing
-## Adding new tests
-Create the `.txt` file with your new program in it and put it in one of the test directories. Then add the filepath to the `test_files` list in `test.ml`.
+# Final Assessment:
+The code for the final assessment can be found in src/finalassessment.
+There are a series of test files, which can be selected in the codegenx86test.ml file. Uncomment the test you wish to run. Then run
+``` 
+eval `opam config env`
+ocamlbuild -use-menhir -use-ocamlfind codegenx86test.native
+./codegenx86test.native
+gcc testout.s
+./a.out
+```
 
 ## Syntax
 ```

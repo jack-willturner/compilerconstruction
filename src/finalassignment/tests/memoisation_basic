@@ -1,0 +1,4 @@
+(* An example of memoisation *)
+main () :
+  let x := plus5(2) in x.
+plus5(x) : x + 5

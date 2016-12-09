@@ -3,6 +3,7 @@
 %token  <int>       INT
 %token  <string>    STRING
 
+%token              EMPTY
 %token              PLUS MINUS TIMES DIV
 %token              LEQ GEQ EQUAL NOTEQUAL
 %token              AND OR NOT
@@ -34,6 +35,7 @@
 %%
 
 exp:
+    | EMPTY                                                                           { Empty }
     | LET; x = STRING; ASSIGN; e = exp; IN; f = exp;                                  { Let(x,e,f) }
     | NEW; x = STRING; ASSIGN; e = exp; IN; f = exp;                                  { New(x,e,f) }
     | e = params                                                                      { e }

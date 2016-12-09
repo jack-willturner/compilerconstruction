@@ -1,0 +1,28 @@
+main() :
+  new counter := 1 in
+  new numfizz := 3 in
+  new numbuzz := 5 in
+  new numfizzbuzz := 1 in
+  while(counter <= 100) {
+    if(numfizzbuzz == 15) {
+        numfizz := 0;
+        numbuzz := 0;
+        numfizzbuzz := 0
+    } else {
+      if(numfizz == 3) {
+        print_int 3;
+        numfizz := 0
+      } else {
+        numfizz := numfizz
+      };
+      if(numbuzz == 5) {
+        print_int 5
+      } else {
+        numbuzz := numbuzz
+      }
+    };
+    numfizz := numfizz + 1;
+    numbuzz := numbuzz + 1;
+    numfizzbuzz := numfizzbuzz +1;
+    counter := counter + 1
+  }
